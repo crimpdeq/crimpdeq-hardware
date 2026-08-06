@@ -14,7 +14,7 @@ placement/routing, connector-edge, or other fabrication/fit changes.
 
 ## Current board (read first)
 
-**`pcb/designs/crimpdeq-v2-nano/crimpdeq-v2-nano.kicad_pcb`
+**`pcb/designs/crimpdeq-v2-nano/crimpdeq.kicad_pcb`
 is the current canonical design.**
 
 - 4 copper layers, `25.00 x 26.00 mm` outline (bbox `25.05 x 26.05 mm` incl. edge stroke).
@@ -29,7 +29,7 @@ is the current canonical design.**
 
 Package files (all under the current design directory):
 
-- Board / project / rules / schematic: `crimpdeq-v2-nano.{kicad_pcb,kicad_pro,kicad_dru,kicad_sch}`
+- Board / project / rules / schematic: `crimpdeq.{kicad_pcb,kicad_pro,kicad_dru,kicad_sch}`
 - Gerber ZIP: `gerbers/crimpdeq-v2-nano.zip`
 - JLC DFM mapping: `reports/crimpdeq-v2-nano_jlc_tht_to_smd.md` (DRC itself is checked by CI on
   every push/PR, not committed as a static report)
@@ -319,7 +319,7 @@ Run from the repository root.
 
 ```sh
 DESIGN=pcb/designs/crimpdeq-v2-nano
-BOARD="$DESIGN/crimpdeq-v2-nano.kicad_pcb"
+BOARD="$DESIGN/crimpdeq.kicad_pcb"
 
 # DRC (expect 0 violations / 0 unconnected); CI runs this on every push/PR,
 # no static report is committed to the design directory
@@ -353,7 +353,7 @@ Use the installed local tools instead of guessing alternate PCB/CAD utilities.
 ```sh
 # open the board in the GUI
 open -a KiCad \
-  pcb/designs/crimpdeq-v2-nano/crimpdeq-v2-nano.kicad_pro
+  pcb/designs/crimpdeq-v2-nano/crimpdeq.kicad_pro
 ```
 
 Use KiCad Python for repeatable geometry checks (board-outline size, footprint side counts,
@@ -364,9 +364,10 @@ Export production gerbers + drill for the 4-layer board (note the inner layers):
 
 ```sh
 DESIGN=pcb/designs/crimpdeq-v2-nano
-NAME=crimpdeq-v2-nano
-BOARD="$DESIGN/$NAME.kicad_pcb"
-OUT=/tmp/$NAME-gerbers
+PROJECT=crimpdeq
+PACKAGE=crimpdeq-v2-nano
+BOARD="$DESIGN/$PROJECT.kicad_pcb"
+OUT=/tmp/$PACKAGE-gerbers
 mkdir -p "$OUT"
 kicad-cli pcb export gerbers --output "$OUT" \
   --layers F.Cu,In1.Cu,In2.Cu,B.Cu,F.Paste,B.Paste,F.Mask,B.Mask,F.Silkscreen,B.Silkscreen,Edge.Cuts \
@@ -374,7 +375,7 @@ kicad-cli pcb export gerbers --output "$OUT" \
 kicad-cli pcb export drill --output "$OUT" --format excellon --drill-origin absolute \
   --excellon-units mm --excellon-zeros-format decimal --excellon-separate-th \
   --generate-map --map-format gerberx2 --generate-report --report-path "$OUT/drill_report.txt" "$BOARD"
-(cd "$OUT" && zip -q -r "$OLDPWD/$DESIGN/gerbers/$NAME.zip" .)
+(cd "$OUT" && zip -q -r "$OLDPWD/$DESIGN/gerbers/$PACKAGE.zip" .)
 ```
 
 ### FreeRouting

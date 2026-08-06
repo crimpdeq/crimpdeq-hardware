@@ -65,7 +65,7 @@ $PY tools/4layer/import_ses.py /tmp/pcbwork/optB4_noroute.kicad_pcb \
 # 4. add GND/power planes + antenna keepout, fill zones
 $PY tools/4layer/add_planes.py /tmp/pcbwork/optB4_routed.kicad_pcb \
   /tmp/pcbwork/optB4_planes.kicad_pcb
-cp pcb/designs/crimpdeq-v2-nano/crimpdeq-v2-nano.kicad_dru \
+cp pcb/designs/crimpdeq-v2-nano/crimpdeq.kicad_dru \
   /tmp/pcbwork/optB4_planes.kicad_dru   # J2 pad-to-NPTH hole-clearance exception
 
 # 5. verify

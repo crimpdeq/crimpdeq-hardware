@@ -1,6 +1,6 @@
 # JLCPCB Assembly Package
 
-Assembly files for `../crimpdeq-v2-nano.kicad_pcb`.
+Assembly files for `../crimpdeq.kicad_pcb`.
 
 - `crimpdeq-v2-nano_bom.csv`: grouped BOM with LCSC part numbers.
 - `crimpdeq-v2-nano_cpl.csv`: 48 placements, 28 top / 20 bottom.

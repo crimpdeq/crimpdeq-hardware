@@ -1,7 +1,7 @@
 # Compact 25 x 26 mm Board Tooling
 
 Reproduction scripts for
-`pcb/designs/crimpdeq-v2-nano/crimpdeq-v2-nano.kicad_pcb`.
+`pcb/designs/crimpdeq-v2-nano/crimpdeq.kicad_pcb`.
 
 The input electrical baseline is `pcb/designs/crimpdeq-v2/crimpdeq.kicad_pcb`, re-placed and
 re-routed into 4 layers via the `../4layer/` pipeline before being compacted into this
@@ -32,7 +32,7 @@ Run the compact DFM audit with KiCad's bundled Python:
 # assembly/README.md in each design folder for OS-specific paths.
 PY=python3
 $PY tools/compact/check_dfm.py \
-  pcb/designs/crimpdeq-v2-nano/crimpdeq-v2-nano.kicad_pcb
+  pcb/designs/crimpdeq-v2-nano/crimpdeq.kicad_pcb
 ```
 
 The accepted DFM finish moves R7/R8/C12 toward U3, clears J3.2 around R1/C18, moves the
@@ -45,7 +45,7 @@ contains the USB4105-GF-A pad-to-NPTH clearance rule. Copy it beside the scratch
 same basename before running DRC, for example:
 
 ```sh
-cp pcb/designs/crimpdeq-v2-nano/crimpdeq-v2-nano.kicad_dru \
+cp pcb/designs/crimpdeq-v2-nano/crimpdeq.kicad_dru \
   /tmp/pcbcompact/review_final.kicad_dru
 kicad-cli pcb drc --refill-zones --severity-error \
   --output /tmp/pcbcompact/review_final_drc.txt \

@@ -38,10 +38,11 @@ def refkey(reference):
 
 
 version_dir = Path(__file__).resolve().parents[1]
-name = version_dir.name
-board_path = version_dir / f"{name}.kicad_pcb"
-bom_path = version_dir / "assembly" / f"{name}_bom.csv"
-out = version_dir / "assembly" / f"{name}_cpl.csv"
+design_name = version_dir.name
+project_name = "crimpdeq"
+board_path = version_dir / f"{project_name}.kicad_pcb"
+bom_path = version_dir / "assembly" / f"{design_name}_bom.csv"
+out = version_dir / "assembly" / f"{design_name}_cpl.csv"
 
 if not bom_path.is_file():
     raise SystemExit(f"generate the BOM before the CPL: {bom_path}")
@@ -58,7 +59,7 @@ if bom_refs != EXPECTED_REFS:
         f"extra={sorted(bom_refs - EXPECTED_REFS)}"
     )
 
-with tempfile.TemporaryDirectory(prefix=f"{name}-cpl-") as temp_dir:
+with tempfile.TemporaryDirectory(prefix=f"{design_name}-cpl-") as temp_dir:
     raw_path = Path(temp_dir) / "positions.csv"
     subprocess.run(
         [

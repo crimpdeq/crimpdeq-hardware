@@ -25,8 +25,8 @@ jobs:
             pcb: pcb/designs/crimpdeq-v2/crimpdeq.kicad_pcb
             schematic: pcb/designs/crimpdeq-v2/crimpdeq.kicad_sch
           - name: crimpdeq-v2-nano
-            pcb: pcb/designs/crimpdeq-v2-nano/crimpdeq-v2-nano.kicad_pcb
-            schematic: pcb/designs/crimpdeq-v2-nano/crimpdeq-v2-nano.kicad_sch
+            pcb: pcb/designs/crimpdeq-v2-nano/crimpdeq.kicad_pcb
+            schematic: pcb/designs/crimpdeq-v2-nano/crimpdeq.kicad_sch
     env:
       PCB_FILE: ${{ matrix.pcb }}
       SCH_FILE: ${{ matrix.schematic }}

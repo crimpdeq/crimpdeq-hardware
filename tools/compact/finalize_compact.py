@@ -59,6 +59,13 @@ def add_rule_area(board, layers, name, box, block_fill, block_tracks, block_vias
     board.Add(zone)
 
 
+def hide_silkscreen_fields(board):
+    for footprint in board.GetFootprints():
+        for field in footprint.GetFields():
+            if field.GetLayer() in {pcbnew.F_SilkS, pcbnew.B_SilkS}:
+                field.SetVisible(False)
+
+
 def move_functional_labels(board):
     placements = {
         "A-": (129.00, 76.00, 0),
@@ -105,6 +112,7 @@ def main():
     add_zone(board, board.FindNet("+3V3"), pcbnew.In2_Cu, "L3_3V3_power", 1)
     add_zone(board, board.FindNet("GND"), pcbnew.B_Cu, "L4_GND_flood", 0)
     add_zone(board, board.FindNet("GND"), pcbnew.F_Cu, "L1_GND_flood", 0)
+    hide_silkscreen_fields(board)
     move_functional_labels(board)
     validate_frozen_design(board, "finalized board")
 

@@ -177,7 +177,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/e8d77bec-5d70-4d93-8b62-0f10245af615")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -405,7 +405,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/b5edee7f-1c91-46c1-96a6-32657091def2")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -838,7 +838,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/292601cf-b4fe-4ad1-b1ba-71a8bce3ebbe")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -1067,7 +1067,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/a03204c0-6732-4881-a327-ce0a3c4731a2")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -1353,7 +1353,7 @@
 		)
 		(path "/8d6ef49d-e7cc-42c5-87a5-c0920cb941ca")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -1656,7 +1656,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/4b3f99e9-391b-4f15-8a7e-98ad02eac878")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -1945,7 +1945,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/e346359b-a538-4fed-9c98-c2679632b26c")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -2156,7 +2156,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/706d6462-cb8f-4fe2-8d7f-49daa1a60001")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -2466,7 +2466,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/494a9f86-0022-46fe-856c-c69779b770e7")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -2689,7 +2689,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/6df18282-376c-42cb-9776-4cbf54336e4f")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -2912,7 +2912,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/7eb10c57-2e8c-460e-9d15-97f0ce9dcd0f")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -3140,7 +3140,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/3cd1f910-278c-4a47-b0b3-88ba3454f7e4")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -3369,7 +3369,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/1728b484-0bb8-48e7-93f7-4491fa8c7d71")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -3598,7 +3598,7 @@
 		(property ki_fp_filters "Choke_* *Coil* Inductor_* L_*")
 		(path "/326507b3-8e86-46be-9890-52961616db1f")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -3880,7 +3880,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/f6bee986-a024-44a2-b7b9-6ccd82f2fa68")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -4103,7 +4103,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/f4b6456c-b721-4dbc-8a02-4659a05f63a3")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -4274,7 +4274,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/9bd74722-9b93-495d-970e-51d63d86e1d7")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -4503,7 +4503,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/be4c7547-7299-4a5d-a885-a451c5713766")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -4732,7 +4732,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/56b2ed15-caa4-46a1-9285-5c164ef8314c")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -4975,7 +4975,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/c16e5901-c22e-4b6a-814d-5b6291140849")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -5204,7 +5204,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/e12ead62-108d-4c45-8e2c-b4c674c30450")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -5428,7 +5428,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/aa36efcc-d24a-473d-a563-2c65bacd13ac")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -5733,7 +5733,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/fe3e50a9-ab31-45d2-9dd7-ec1f8d5bd4aa")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -6020,7 +6020,7 @@
 		(property ki_fp_filters "SOP*3.9x9.9mm*P1.27mm*")
 		(path "/928b8c51-4805-4707-a380-c936ed3db9fd")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -6429,7 +6429,7 @@
 		(property ki_fp_filters "TDFN*8*2x2mm*P0.5mm*")
 		(path "/effa21c2-b37b-4909-bf4b-4a42f5c84a42")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -6878,7 +6878,7 @@
 		)
 		(path "/8fd4ca41-4d5e-4e93-ae8a-c252878ed547")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -7291,7 +7291,7 @@
 		(property ki_fp_filters "LED* LED_SMD:* LED_THT:*")
 		(path "/220fc873-3cba-4b55-8d88-36bc73dee650")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -7557,7 +7557,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/f1168941-8d8c-46c6-b665-f0432816896a")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -7709,7 +7709,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/b0fa24f1-3111-439c-b18d-a52708a77999")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -7945,7 +7945,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/c018a2e6-aa6d-4d86-b10d-20442c2fd60b")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -8168,7 +8168,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/2b79b335-778b-46b5-a9c4-9058cdf8318e")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -8391,7 +8391,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/83d71330-17c0-4d21-ac60-8ac6ff0a6442")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -8612,7 +8612,7 @@
 		(property ki_fp_filters "SOT?23*")
 		(path "/183ccd35-9d0d-4e22-ad00-61bbd9330c61")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -8876,7 +8876,7 @@
 		(property ki_fp_filters "LED*WS2812*PLCC*5.0x5.0mm*P3.2mm*")
 		(path "/e56cc321-a154-44f2-a842-aac197ec0838")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -9204,7 +9204,7 @@
 		(property ki_fp_filters "TO-???* *_Diode_* *SingleDiode* D_*")
 		(path "/25dc05f7-9b0c-4e07-a1b9-e9c78006388d")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -9496,7 +9496,7 @@
 		(property ki_fp_filters "SOT?23*")
 		(path "/03b37bc1-68ae-4b82-a140-3dd3a2cfc0e7")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -9793,7 +9793,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/c066411a-cfba-4cb8-bdde-82f5bf3e8f64")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -10016,7 +10016,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/ea4ab3e4-ce9c-4aaa-b39c-633c48de64a8")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -10176,6 +10176,7 @@
 		(property "Reference" "U1"
 			(at 0 4.5 0)
 			(layer "B.SilkS")
+			(hide yes)
 			(uuid "aa8f6261-9699-475d-a365-4fa8d231aa24")
 			(effects
 				(font
@@ -10240,7 +10241,7 @@
 		)
 		(path "/5e352ba9-5ed8-4ebd-806c-492f8b1d731f")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -11175,7 +11176,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/ada1c47f-2e95-49a5-a8ea-1ca33f0d66aa")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -11398,7 +11399,7 @@
 		(property ki_fp_filters "SOT?23*")
 		(path "/81d13318-3c40-4793-9416-94128dfb4c90")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -11774,7 +11775,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/5000e0e1-ede4-4ee8-b3dc-b887119929ef")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -11997,7 +11998,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/cddb95c1-ec25-4be0-83a7-99fa9473c2d7")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -12220,7 +12221,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/a40c5b88-e1f0-41c6-a5c5-679d3f25bf80")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -12443,7 +12444,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/f005473f-1f65-471a-8748-4ddf5c95c2d5")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")
@@ -12679,7 +12680,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/2221bd7f-d34e-4d02-8da1-96a5aeed7b53")
 		(sheetname "/")
-		(sheetfile "crimpdeq-v2-nano.kicad_sch")
+		(sheetfile "crimpdeq.kicad_sch")
 		(units
 			(unit
 				(name "A")

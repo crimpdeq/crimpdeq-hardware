@@ -2,8 +2,8 @@
 
 Current compact production design.
 
-- Board/project/rules: `crimpdeq-v2-nano.{kicad_pcb,kicad_pro,kicad_dru}`
-- Local schematic copy: `crimpdeq-v2-nano.kicad_sch`
+- Board/project/rules: `crimpdeq.{kicad_pcb,kicad_pro,kicad_dru}`
+- Local schematic copy: `crimpdeq.kicad_sch`
 - Outline: 25.00 x 26.00 mm (25.05 x 26.05 mm including edge stroke)
 - Components: 48 total, 28 front / 20 back
 - U1 antenna and D4 LED: back; J2 USB-C and U3 HX711: front

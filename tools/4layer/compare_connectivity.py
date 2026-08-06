@@ -55,3 +55,6 @@ if pA!=pB:
     print(f"  net-classes only in {labelA}: {len(onlyPA)}; only in {labelB}: {len(onlyPB)}")
     for s in list(onlyPA)[:8]: print("   A-only net class:", sorted(s))
     for s in list(onlyPB)[:8]: print("   B-only net class:", sorted(s))
+
+if onlyA or onlyB or namediff or pA != pB:
+    raise SystemExit(1)

@@ -49,12 +49,13 @@ def refkey(reference):
 
 
 version_dir = Path(__file__).resolve().parents[1]
-name = version_dir.name
-board_path = version_dir / f"{name}.kicad_pcb"
-schematic_path = version_dir / f"{name}.kicad_sch"
-out = version_dir / "assembly" / f"{name}_bom.csv"
+design_name = version_dir.name
+project_name = "crimpdeq"
+board_path = version_dir / f"{project_name}.kicad_pcb"
+schematic_path = version_dir / f"{project_name}.kicad_sch"
+out = version_dir / "assembly" / f"{design_name}_bom.csv"
 
-with tempfile.TemporaryDirectory(prefix=f"{name}-bom-") as temp_dir:
+with tempfile.TemporaryDirectory(prefix=f"{design_name}-bom-") as temp_dir:
     schematic_bom = Path(temp_dir) / "schematic.csv"
     subprocess.run(
         [

@@ -4,13 +4,12 @@ KiCad PCB design for Crimpdeq. See the [Crimpdeq book](https://crimpdeq.com/) fo
 
 ## PCB
 
-Complete PCB designs are stored under [`pcb/designs/`](pcb/designs/):
+The single canonical design is stored under [`pcb/crimpdeq/`](pcb/crimpdeq/). It is a
+30 x 30 mm four-layer board with corrected ESP32 module grounding, hardware I²C/alert
+pull-ups, improved ground stitching and power/analog bypass placement, and load-cell cable
+pads grouped away from the antenna.
 
-- `crimpdeq-v2/` is the original two-layer design (`23 x 63.8 mm`), based on the [Rust ESP Board](https://github.com/esp-rs/esp-rust-board). This design removes unused sensors from the original board and adds the necessary components for this project. It remains the frozen electrical reference used to verify derived designs.
-- `crimpdeq-v2-nano/` is a compact 4-layer redesign (`25 x 26 mm`, ~56% smaller board area than `crimpdeq-v2`) with the antenna and status LED both moved to the back and USB/HX711 kept on the front. It is electrically identical to `crimpdeq-v2` (same BOM and netlist).
-
-Shared footprints and datasheets remain under `pcb/libraries/` and `pcb/datasheets/`.
-See `pcb/designs/README.md` for the design-version policy and package contents.
+Shared footprints are under `libraries/`; datasheets remain under `pcb/datasheets/`.
 
 ![PCB](assets/pcb_v1.png)
 

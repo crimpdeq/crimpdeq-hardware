@@ -6,10 +6,12 @@ on:
       - main
     paths:
       - "pcb/**"
+      - "libraries/**"
       - ".github/workflows/pcb_ci.yml"
   pull_request:
     paths:
       - "pcb/**"
+      - "libraries/**"
       - ".github/workflows/pcb_ci.yml"
   workflow_dispatch:
 
@@ -21,12 +23,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: crimpdeq-v2
-            pcb: pcb/designs/crimpdeq-v2/crimpdeq.kicad_pcb
-            schematic: pcb/designs/crimpdeq-v2/crimpdeq.kicad_sch
-          - name: crimpdeq-v2-nano
-            pcb: pcb/designs/crimpdeq-v2-nano/crimpdeq.kicad_pcb
-            schematic: pcb/designs/crimpdeq-v2-nano/crimpdeq.kicad_sch
+          - name: crimpdeq
+            pcb: pcb/crimpdeq/crimpdeq.kicad_pcb
+            schematic: pcb/crimpdeq/crimpdeq.kicad_sch
     env:
       PCB_FILE: ${{ matrix.pcb }}
       SCH_FILE: ${{ matrix.schematic }}

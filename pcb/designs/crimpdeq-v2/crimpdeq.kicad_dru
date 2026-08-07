@@ -1,5 +1,0 @@
-(version 1)
-
-(rule "J2 USB-C manufacturer pad-to-NPTH clearance"
-  (constraint hole_clearance (min 0.15mm))
-  (condition "A.memberOfFootprint('J2') && B.memberOfFootprint('J2')"))

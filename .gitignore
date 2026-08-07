@@ -45,7 +45,3 @@ fp-info-cache
 
 # Editor local-history caches
 .history/
-
-# Analysis/output -- regenerable from source files
-pcb/designs/crimpdeq-v2/analysis/
-pcb/designs/crimpdeq-v2/production/

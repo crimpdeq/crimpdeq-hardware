@@ -12,8 +12,8 @@ jobs:
     name: Build PCB release files
     runs-on: ubuntu-latest
     env:
-      PCB_FILE: pcb/designs/crimpdeq-v2-nano/crimpdeq.kicad_pcb
-      SCH_FILE: pcb/designs/crimpdeq-v2-nano/crimpdeq.kicad_sch
+      PCB_FILE: pcb/crimpdeq/crimpdeq.kicad_pcb
+      SCH_FILE: pcb/crimpdeq/crimpdeq.kicad_sch
 
     steps:
       - name: Checkout
@@ -71,8 +71,8 @@ jobs:
 
       - name: Copy validated assembly files
         run: |
-          cp pcb/designs/crimpdeq-v2-nano/assembly/crimpdeq-v2-nano_bom.csv artifacts/bom.csv
-          cp pcb/designs/crimpdeq-v2-nano/assembly/crimpdeq-v2-nano_cpl.csv artifacts/position.csv
+          cp pcb/crimpdeq/assembly/crimpdeq_bom.csv artifacts/bom.csv
+          cp pcb/crimpdeq/assembly/crimpdeq_cpl.csv artifacts/position.csv
 
       - name: Verify Gerber fabrication layers
         run: |

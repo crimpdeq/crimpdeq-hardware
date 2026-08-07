@@ -14,7 +14,12 @@ WS2812B,D4,LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm,C52917433
 LESD5D5.0CT1G,"D7,D9,D10",D_SOD-523,C2982332
 USB4105-GF-A,J2,GCT_USB4105-GF-A,C165948
 Loadcell_Pads,J3,External_Cable_Pads_Left,
-Power_Sense_Pads,J4,External_Cable_Pads_Right,
+B-_Cable_Pad,J5,TestPoint_THTPad_D1.5mm_Drill0.7mm,
+SW+_Cable_Pad,J6,TestPoint_THTPad_D1.5mm_Drill0.7mm,
+B+_Cable_Pad,J7,TestPoint_THTPad_D1.5mm_Drill0.7mm,
+SW-_Cable_Pad,J8,TestPoint_THTPad_D1.5mm_Drill0.7mm,
+A+_Cable_Pad,J9,TestPoint_THTPad_D1.5mm_Drill0.7mm,
+A-_Cable_Pad,J10,TestPoint_THTPad_D1.5mm_Drill0.7mm,
 SPH4018H2R2MT (2.2uH 2.2A),L1,L_Bourns-SRN4018,C370436
 SS8550,Q1,SOT-23,C266595
 DMG3415U,Q2,SOT-23,C96616

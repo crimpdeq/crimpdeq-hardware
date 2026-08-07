@@ -9,7 +9,7 @@ import pcbnew
 
 EXPECTED_REFS = frozenset(
     "C1 C2 C3 C4 C5 C6 C9 C10 C11 C12 C15 C16 C17 C18 "
-    "D1 D2 D3 D4 D7 D8 D9 D10 J2 J3 J4 L1 Q1 Q2 "
+    "D1 D2 D3 D4 D7 D8 D9 D10 J2 J3 J5 J6 J7 J8 J9 J10 L1 Q1 Q2 "
     "R1 R2 R3 R5 R6 R7 R8 R9 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 "
     "U1 U2 U3 U5 U6".split()
 )
@@ -19,16 +19,16 @@ GOLDEN_NETS = {
         "C1.1 C2.1 C4.1 C9.1 C16.1 C17.1 D3.1 D4.1 L1.2 Q1.2 R1.1 "
         "R15.1 R20.2 R21.2 R22.2 U1.3 U3.1 U3.15 U3.16"
     ),
-    "+BATT": "C6.1 C18.1 J4.3 U2.3 U5.2 U5.3",
+    "+BATT": "C6.1 C18.1 J6.1 J7.1 U2.3 U5.2 U5.3",
     "/Buck_Coil": "L1.1 U6.3",
-    "A+": "J4.2 R7.2",
-    "A-": "J4.1 R8.2",
+    "A+": "J9.1 R7.2",
+    "A-": "J10.1 R8.2",
     "CHIP_PU": "C3.1 R1.2 U1.8",
     "E+": "C10.1 J3.1 Q1.3 R5.1 U3.3",
     "ENABLE": "R14.2 U6.1",
     "GND": (
         "C1.2 C2.2 C3.2 C4.2 C5.1 C6.2 C9.2 C10.2 C11.1 C15.2 C17.2 "
-        "C18.2 D3.2 D4.3 D7.2 D9.2 D10.2 J2.A1_B12 J2.B1_A12 J3.2 R2.1 "
+        "C18.2 D3.2 D4.3 D7.2 D9.2 D10.2 J2.A1_B12 J2.B1_A12 J3.2 J5.1 R2.1 "
         "R6.2 R9.2 R16.2 R17.2 R18.2 R19.2 U1.1 U1.2 U1.11 U1.14 U1.36 "
         "U1.37 U1.38 U1.39 U1.40 U1.41 U1.42 U1.43 U1.44 U1.45 U1.46 "
         "U1.47 U1.48 U1.49 U1.50 U1.51 U1.52 U1.53 U2.2 U3.5 U3.9 U3.10 "
@@ -54,7 +54,7 @@ GOLDEN_NETS = {
     "Net-(U3-VBG)": "C11.2 U3.6",
     "Net-(U3-VFB)": "R5.2 R6.1 U3.4",
     "Net-(U6-FB)": "C16.2 R15.2 R16.1 U6.5",
-    "SW_BATT": "J4.4 Q2.3",
+    "SW_BATT": "J8.1 Q2.3",
     "USB_D+": "D10.1 J2.A6 J2.B6 U1.27",
     "USB_D-": "D7.1 J2.A7 J2.B7 U1.26",
     "VBUS": "C5.2 D1.2 D2.2 D8.1 Q2.1 R9.1 U2.4",
@@ -190,13 +190,25 @@ def main():
                 f"limit={max_length:.3f} mm/{max_vias} vias"
             )
 
-    cable_pads = (
-        pad(footprints["J3"], "2"), pad(footprints["J4"], "1"),
-        pad(footprints["J4"], "2"), pad(footprints["J3"], "1"),
+    loadcell_pads = (
+        pad(footprints["J3"], "2"),
+        pad(footprints["J10"], "1"),
+        pad(footprints["J9"], "1"),
+        pad(footprints["J3"], "1"),
     )
-    positions = [(mm(item.GetPosition().x), mm(item.GetPosition().y)) for item in cable_pads]
+    positions = [(mm(item.GetPosition().x), mm(item.GetPosition().y)) for item in loadcell_pads]
     if any(abs(y - 81.10) > 0.01 or x >= 140.0 for x, y in positions):
         raise SystemExit(f"load-cell pads are not grouped on the bottom analog edge: {positions}")
+
+    battery_pads = (
+        pad(footprints["J5"], "1"),
+        pad(footprints["J7"], "1"),
+        pad(footprints["J6"], "1"),
+        pad(footprints["J8"], "1"),
+    )
+    battery_positions = [(mm(item.GetPosition().x), mm(item.GetPosition().y)) for item in battery_pads]
+    if any(abs(x - 156.20) > 0.05 for x, _ in battery_positions):
+        raise SystemExit(f"battery/switch pads are not on the right edge column: {battery_positions}")
 
     print(
         f"Crimpdeq verification passed: {len(footprints)} components, "

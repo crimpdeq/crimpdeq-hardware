@@ -240,7 +240,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": ""
+      "sch_revision": "3.0"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -646,13 +646,18 @@
       {
         "filename": "crimpdeq.kicad_sch",
         "name": "crimpdeq",
-        "uuid": "00000000-0000-0000-0000-000000000000"
+        "uuid": "eb289f4a-30cd-4b15-be5d-5da73d92c8be"
       }
     ],
-    "used_designators": "",
+    "used_designators": "#PWR16-17,#PWR19",
     "variants": []
   },
-  "sheets": [],
+  "sheets": [
+    [
+      "eb289f4a-30cd-4b15-be5d-5da73d92c8be",
+      "crimpdeq"
+    ]
+  ],
   "text_variables": {},
   "tuning_profiles": {
     "meta": {

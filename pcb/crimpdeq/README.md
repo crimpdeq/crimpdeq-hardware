@@ -27,7 +27,6 @@ Production files:
 
 - Gerbers: `gerbers/crimpdeq.zip`
 - Assembly package: `assembly/`
-- Front/back renders: `renders/`
 
 Manufacturer DFM review and physical validation of power integrity, USB, ADS1220 noise, antenna
 performance, and connector fit remain required before production.

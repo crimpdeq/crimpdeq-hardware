@@ -51,7 +51,6 @@ Keep token use low on long PCB work:
 - KiCad source and rules: `pcb/crimpdeq/crimpdeq.{kicad_pcb,kicad_pro,kicad_dru,kicad_sch}`
 - Gerber ZIP: `pcb/crimpdeq/gerbers/crimpdeq.zip`
 - Assembly BOM/CPL: `pcb/crimpdeq/assembly/crimpdeq_{bom,cpl}.csv`
-- Renders: `pcb/crimpdeq/renders/crimpdeq_{front,back}.png`
 - DFM report: `pcb/crimpdeq/reports/crimpdeq_jlc_tht_to_smd.md`
 - Component datasheets: `pcb/datasheets/*.md`
 - Invariant checker: `tools/crimpdeq/verify.py`
@@ -66,6 +65,17 @@ Keep token use low on long PCB work:
 - Keep power paths low impedance and the SY8088 buck loop compact.
 - Route USB D+/D- as a matched pair and keep protection/CC parts near J2.
 - Refill zones after PCB changes.
+
+## Preview renders
+
+Generate previews on demand with Konnect; do not commit generated render files:
+
+- Schematic: call `konnect_get_schematic_view` with
+  `schematic: pcb/crimpdeq/crimpdeq.kicad_sch`.
+- PCB: call `konnect_get_board_2d_view` with `board: pcb/crimpdeq/crimpdeq.kicad_pcb` and the
+  desired `width` and `height`. This produces a top-down 3D board render, not a layer plot.
+
+If a preview must be saved as a file, keep it under `/tmp` and delete it after use.
 
 ## Verification
 

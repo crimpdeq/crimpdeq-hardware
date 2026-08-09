@@ -6,6 +6,26 @@ The single canonical KiCad project lives at `pcb/crimpdeq/`. Shared footprints a
 Do not create versioned design directories. Update the canonical project only when the user
 explicitly requests a design change, and use Konnect MCP tools for all KiCad source changes.
 
+## Session efficiency
+
+Keep token use low on long PCB work:
+
+- Split work across chats: schematic, then PCB/route, then verify/docs. Start a fresh session
+  once ERC, DRC, and `verify.py` are green.
+- Prefer Konnect MCP queries (components, nets, clearances, DRC summaries) over reading or
+  dumping whole `.kicad_pcb` / `.kicad_sch` / netlist files into context.
+- Do not `git diff` the board or schematic in-session; trust DRC, ERC, and `verify.py` output.
+- Keep Freerouting/Java downloads in gitignored `.tools/` only; delete when done. Do not open
+  autorouter logs in the IDE during the chat.
+- Prefer Konnect `autoroute` when available; bound local autoroute retries (stop after a few
+  failures and report blockers instead of looping on JRE/jar downloads).
+- Plan first when the change is ambiguous; execute only the locked scope. Say so explicitly if
+  the user already constrained the task.
+- Update this handoff when board facts change so later sessions do not rediscover SPI maps,
+  keepouts, or check commands.
+- Do not leave one-shot helper scripts in `tools/`; only keep reusable checkers such as
+  `verify.py`.
+
 ## Current board
 
 - Project: `pcb/crimpdeq/crimpdeq.kicad_pro`

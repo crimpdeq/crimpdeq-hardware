@@ -9,12 +9,12 @@ from pathlib import Path
 
 
 EXPECTED_REFS = frozenset(
-    "C1 C2 C3 C4 C5 C6 C9 C10 C11 C12 C15 C16 C17 C18 "
-    "D1 D2 D3 D4 D7 D8 D9 D10 J2 J5 J6 J7 J8 J9 J10 J11 J12 L1 Q1 Q2 "
-    "R1 R2 R3 R5 R6 R7 R8 R9 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 "
+    "C1 C2 C3 C4 C5 C6 C9 C10 C11 C12 C15 C16 C17 C18 C19 "
+    "D1 D2 D3 D4 D7 D8 D9 D10 J2 J5 J6 J7 J8 J9 J10 J11 J12 L1 Q2 "
+    "R1 R2 R3 R7 R8 R9 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 "
     "U1 U2 U3 U5 U6".split()
 )
-BOTTOM_UNMIRRORED_REFS = frozenset({"Q1", "Q2", "U2"})
+BOTTOM_UNMIRRORED_REFS = frozenset({"Q2", "U2"})
 TOP_ROTATION_OFFSETS = {"U3": 270.0, "U6": 180.0}
 # J2 uses the GCT body centroid. Cable pads J5-J12 are DNP THT pads.
 POSITION_OVERRIDES = {
@@ -22,10 +22,9 @@ POSITION_OVERRIDES = {
 }
 CORRECTION_EXPECTATIONS = {
     "J2": ("GCT_USB4105-GF-A", "top"),
-    "Q1": ("SOT-23", "bottom"),
     "Q2": ("SOT-23", "bottom"),
     "U2": ("SOT-23-5", "bottom"),
-    "U3": ("SOP-16_3.9x9.9mm_P1.27mm", "top"),
+    "U3": ("TSSOP-16_4.4x5mm_P0.65mm", "top"),
     "U6": ("SOT-23-5", "top"),
 }
 

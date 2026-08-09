@@ -10,14 +10,17 @@ explicitly requests a design change, and use Konnect MCP tools for all KiCad sou
 
 - Project: `pcb/crimpdeq/crimpdeq.kicad_pro`
 - Four copper layers; 30.00 x 30.00 mm nominal outline.
-- 51 components: 29 front / 22 back; 203 named / 216 physical pads.
-- U1 antenna and D4 LED are on the back; J2 USB-C and U3 HX711 are on the front.
+- 55 components: 36 front / 19 back.
+- U1 antenna and D4 LED are on the back; J2 USB-C and U3 ADS1220 are on the front.
 - U1 ground pins 37–53 are connected to GND.
 - R20/R21/R22 are 10 kΩ pull-ups for SDA, SCL, and MAX17048 ALERT.
 - L2 is a signal-free solid GND plane. L3 carries the 3V3 pour and low-speed signals.
-- Twelve dedicated GND stitching vias connect the outer floods to L2.
-- The buck switch node is 1.83 mm and feedback route is 4.91 mm with no feedback vias.
-- HX711 VBG is 2.32 mm with no vias.
+- At least twelve dedicated GND stitching vias connect the outer floods to L2.
+- The buck switch node is 1.83 mm and feedback is 4.91 mm with no feedback vias.
+- U3 is ADS1220 (TSSOP-16) with ratiometric bridge excitation from +3V3 (E+/REFP0) and
+  E-/REFN0 on GND. Local AVDD/DVDD decoupling is C11 + C19.
+- SPI to U3: GPIO5 `IO5_SCK`→SCLK, GPIO4 `IO4_MOSI`→DIN, GPIO3 `IO3_CS`→~CS,
+  GPIO1 `IO1_MISO`→DOUT/~DRDY. CLK is grounded; dedicated ~DRDY is unused.
 - Load-cell pads are grouped on the bottom edge near U3; battery/switch pads are on the right.
 - The ESP32 antenna and USB body retain their intentional board-edge overhangs.
 
@@ -34,9 +37,9 @@ explicitly requests a design change, and use Konnect MCP tools for all KiCad sou
 
 - Do not introduce electrical changes without an explicit request.
 - Keep the ESP32-C3-MINI-1 module antenna at the board edge with an all-layer copper keepout.
-- Keep L2 free of signal routing and unbroken under the antenna and HX711 analog inputs.
-- Keep the HX711 input pair short, symmetric, on one signal layer, and over solid GND.
-- Keep digital nets away from the HX711 analog input region.
+- Keep L2 free of signal routing and unbroken under the antenna and ADS1220 analog inputs.
+- Keep the ADS1220 AIN0/AIN1 pair short, symmetric, on one signal layer, and over solid GND.
+- Keep digital nets away from the ADS1220 analog input region.
 - Keep power paths low impedance and the SY8088 buck loop compact.
 - Route USB D+/D- as a matched pair and keep protection/CC parts near J2.
 - Refill zones after PCB changes.
@@ -62,11 +65,39 @@ kicad-cli pcb drc --refill-zones --severity-error --schematic-parity \
 Use `kicad-cli` for exports and checks. Use the bundled KiCad Python only for the existing
 verification and assembly scripts; do not directly edit KiCad source files with text tools.
 
+## Autorouting (optional)
+
+Do not commit JREs or Freerouting jars. Prefer Konnect `autoroute` / `check_freerouting` when
+those tools are loaded. If you need a local run, download into gitignored `.tools/` and delete
+when finished.
+
+```sh
+# From the repository root (Apple Silicon macOS example)
+mkdir -p .tools && cd .tools
+
+# Temurin 17 JRE (Freerouting 1.9)
+curl -L --fail -o jre17.tar.gz \
+  "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14%2B7/OpenJDK17U-jre_aarch64_mac_hotspot_17.0.14_7.tar.gz"
+mkdir -p jre17 && tar -xzf jre17.tar.gz -C jre17
+JAVA="$(find jre17 -type f -name java | head -1)"
+
+# Freerouting 1.9 (built for Java 17). Newer Freerouting 2.x needs Java 21+.
+curl -L --fail -o freerouting.jar \
+  "https://github.com/freerouting/freerouting/releases/download/v1.9.0/freerouting-1.9.0.jar"
+
+# Export Specctra DSN from KiCad, route, then import the .ses session back.
+# "$JAVA" -jar freerouting.jar -de /path/to/board.dsn -do /path/to/board.ses -mp 100
+```
+
+On Intel Mac use the Temurin `x64` JRE asset; on Linux/Windows use the matching platform
+package or a system JDK 17+. After import: refill zones, run DRC + `tools/crimpdeq/verify.py`,
+and keep L2 signal-free. Do not autoroute across the ADS1220 AIN region or the antenna keepout.
+
 ## Manufacturing notes
 
 - Track only `pcb/crimpdeq/gerbers/crimpdeq.zip`, not loose Gerber files.
 - J3/J4 are bare cable pads and must be marked Do Not Place.
 - J2 includes plated through-hole shell tabs; assembly may require THT/manual soldering.
 - Re-check package, polarity, side, rotation, and manufacturer DFM before ordering.
-- Physical validation of power integrity, USB, HX711 noise, antenna performance, and connector
+- Physical validation of power integrity, USB, ADS1220 noise, antenna performance, and connector
   fit is still required.

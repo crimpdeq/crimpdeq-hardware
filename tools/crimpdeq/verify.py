@@ -8,36 +8,37 @@ import pcbnew
 
 
 EXPECTED_REFS = frozenset(
-    "C1 C2 C3 C4 C5 C6 C9 C10 C11 C12 C15 C16 C17 C18 "
-    "D1 D2 D3 D4 D7 D8 D9 D10 J2 J5 J6 J7 J8 J9 J10 J11 J12 L1 Q1 Q2 "
-    "R1 R2 R3 R5 R6 R7 R8 R9 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 "
+    "C1 C2 C3 C4 C5 C6 C9 C10 C11 C12 C15 C16 C17 C18 C19 "
+    "D1 D2 D3 D4 D7 D8 D9 D10 J2 J5 J6 J7 J8 J9 J10 J11 J12 L1 Q2 "
+    "R1 R2 R3 R7 R8 R9 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 "
     "U1 U2 U3 U5 U6".split()
 )
 
 GOLDEN_NETS = {
     "+3V3": (
-        "C1.1 C2.1 C4.1 C9.1 C16.1 C17.1 D3.1 D4.1 L1.2 Q1.2 R1.1 "
-        "R15.1 R20.2 R21.2 R22.2 U1.3 U3.1 U3.15 U3.16"
+        "C1.1 C2.1 C4.1 C9.1 C10.1 C11.1 C16.1 C17.1 C19.1 D3.1 D4.1 "
+        "J11.1 L1.2 R1.1 R15.1 R20.2 R21.2 R22.2 U1.3 U3.9 U3.12 U3.13"
     ),
     "+BATT": "C6.1 C18.1 J6.1 J7.1 U2.3 U5.2 U5.3",
-    "/Buck_Coil": "L1.1 U6.3",
+    "Buck_Coil": "L1.1 U6.3",
     "A+": "J9.1 R7.2",
     "A-": "J10.1 R8.2",
     "CHIP_PU": "C3.1 R1.2 U1.8",
-    "E+": "C10.1 J11.1 Q1.3 R5.1 U3.3",
     "ENABLE": "R14.2 U6.1",
     "GND": (
-        "C1.2 C2.2 C3.2 C4.2 C5.1 C6.2 C9.2 C10.2 C11.1 C15.2 C17.2 "
-        "C18.2 D3.2 D4.3 D7.2 D9.2 D10.2 J2.A1_B12 J2.B1_A12 J5.1 J12.1 R2.1 "
-        "R6.2 R9.2 R16.2 R17.2 R18.2 R19.2 U1.1 U1.2 U1.11 U1.14 U1.36 "
+        "C1.2 C2.2 C3.2 C4.2 C5.1 C6.2 C9.2 C10.2 C11.2 C15.2 C17.2 "
+        "C18.2 C19.2 D3.2 D4.3 D7.2 D9.2 D10.2 J2.A1_B12 J2.B1_A12 J5.1 J12.1 R2.1 "
+        "R9.2 R16.2 R17.2 R18.2 R19.2 U1.1 U1.2 U1.11 U1.14 U1.36 "
         "U1.37 U1.38 U1.39 U1.40 U1.41 U1.42 U1.43 U1.44 U1.45 U1.46 "
-        "U1.47 U1.48 U1.49 U1.50 U1.51 U1.52 U1.53 U2.2 U3.5 U3.9 U3.10 "
-        "U3.14 U5.1 U5.4 U5.6 U5.9 U6.2"
+        "U1.47 U1.48 U1.49 U1.50 U1.51 U1.52 U1.53 U2.2 U3.3 U3.4 U3.5 "
+        "U3.8 U5.1 U5.4 U5.6 U5.9 U6.2"
     ),
     "IO10_ALRT": "R22.1 U1.16 U5.5",
+    "IO1_MISO": "U1.13 U3.15",
     "IO2_LED": "R13.1 U1.5",
-    "IO4_DATA": "U1.18 U3.12",
-    "IO5_SCK": "U1.19 U3.11",
+    "IO3_CS": "U1.6 U3.2",
+    "IO4_MOSI": "U1.18 U3.16",
+    "IO5_SCK": "U1.19 U3.1",
     "IO6_SDA": "R20.1 U1.20 U5.7",
     "IO7_SCL": "R21.1 U1.21 U5.8",
     "Net-(D1-K)": "D1.1 R3.2",
@@ -46,13 +47,10 @@ GOLDEN_NETS = {
     "Net-(J2-CC1)": "J2.A5 R19.1",
     "Net-(J2-CC2)": "J2.B5 R18.1",
     "Net-(J2-SHELL_GND-PadS1)": "J2.S1 J2.S2 J2.S3 J2.S4 R17.1",
-    "Net-(Q1-B)": "Q1.1 U3.2",
     "Net-(U2-PROG)": "R2.2 U2.5",
     "Net-(U2-STAT)": "R3.1 U2.1",
-    "Net-(U3-INA+)": "C12.1 R7.1 U3.8",
-    "Net-(U3-INA-)": "C12.2 R8.1 U3.7",
-    "Net-(U3-VBG)": "C11.2 U3.6",
-    "Net-(U3-VFB)": "R5.2 R6.1 U3.4",
+    "Net-(U3-AIN0)": "C12.1 R7.1 U3.11",
+    "Net-(U3-AIN1)": "C12.2 R8.1 U3.10",
     "Net-(U6-FB)": "C16.2 R15.2 R16.1 U6.5",
     "SW_BATT": "J8.1 Q2.3",
     "USB_D+": "D10.1 J2.A6 J2.B6 U1.27",
@@ -102,7 +100,7 @@ def verify_golden_netlist(footprints):
         for item in footprint.Pads():
             number = item.GetPadName()
             net_name = item.GetNetname()
-            if not number or not net_name or net_name.startswith("unconnected-("):
+            if not number or not net_name or net_name.startswith("unconnected-"):
                 continue
             pad_name = f"{reference}.{number}"
             if pad_name in actual and actual[pad_name] != net_name:
@@ -160,6 +158,12 @@ def main():
         if actual != expected:
             raise SystemExit(f"{reference} mismatch: actual={actual}, expected={expected}")
 
+    u3 = footprints["U3"]
+    if u3.GetValue() != "ADS1220":
+        raise SystemExit(f"U3 value mismatch: {u3.GetValue()}")
+    if "TSSOP-16" not in u3.GetFPIDAsString():
+        raise SystemExit(f"U3 footprint mismatch: {u3.GetFPIDAsString()}")
+
     inner_ground_tracks = [
         item for item in board.GetTracks()
         if not isinstance(item, pcbnew.PCB_VIA) and item.GetLayer() == pcbnew.In1_Cu
@@ -175,12 +179,10 @@ def main():
         raise SystemExit(f"expected at least 12 GND stitching vias, found {ground_vias}")
 
     limits = {
-        "/Buck_Coil": (3.0, 0),
+        "Buck_Coil": (3.0, 0),
         "Net-(U6-FB)": (8.0, 0),
-        "Net-(U3-VBG)": (4.0, 0),
-        "E+": (35.0, 2),
-        "Net-(U3-INA+)": (7.0, 0),
-        "Net-(U3-INA-)": (7.0, 0),
+        "Net-(U3-AIN0)": (16.0, 0),
+        "Net-(U3-AIN1)": (16.0, 0),
     }
     for net_name, (max_length, max_vias) in limits.items():
         length, vias, _ = net_metrics(board, net_name)

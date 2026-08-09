@@ -14,6 +14,8 @@ Keep token use low on long PCB work:
   once ERC, DRC, and `verify.py` are green.
 - Prefer Konnect MCP queries (components, nets, clearances, DRC summaries) over reading or
   dumping whole `.kicad_pcb` / `.kicad_sch` / netlist files into context.
+- Consult the searchable Markdown datasheets in `pcb/datasheets/` for component-specific
+  electrical, layout, package, and application guidance before relying on external sources.
 - Do not `git diff` the board or schematic in-session; trust DRC, ERC, and `verify.py` output.
 - Keep Freerouting/Java downloads in gitignored `.tools/` only; delete when done. Do not open
   autorouter logs in the IDE during the chat.
@@ -51,6 +53,7 @@ Keep token use low on long PCB work:
 - Assembly BOM/CPL: `pcb/crimpdeq/assembly/crimpdeq_{bom,cpl}.csv`
 - Renders: `pcb/crimpdeq/renders/crimpdeq_{front,back}.png`
 - DFM report: `pcb/crimpdeq/reports/crimpdeq_jlc_tht_to_smd.md`
+- Component datasheets: `pcb/datasheets/*.md`
 - Invariant checker: `tools/crimpdeq/verify.py`
 
 ## Design constraints

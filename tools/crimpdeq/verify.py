@@ -87,6 +87,25 @@ def pad(footprint, number):
     return matches[0]
 
 
+def via_in_paste(board):
+    overlaps = []
+    for item in board.GetTracks():
+        if not isinstance(item, pcbnew.PCB_VIA):
+            continue
+        radius = item.GetDrillValue() // 2
+        for footprint in board.GetFootprints():
+            for layer in (pcbnew.F_Paste, pcbnew.B_Paste):
+                if footprint.GetLayer() not in (pcbnew.F_Cu, pcbnew.B_Cu):
+                    continue
+                for pad_item in footprint.Pads():
+                    if pad_item.GetEffectiveShape(layer).Collide(item.GetPosition(), radius):
+                        overlaps.append(
+                            f"{footprint.GetReference()}.{pad_item.GetPadName()}@"
+                            f"({mm(item.GetPosition().x):.3f},{mm(item.GetPosition().y):.3f})"
+                        )
+    return overlaps
+
+
 def verify_golden_netlist(footprints):
     expected = {}
     for net_name, pad_names in GOLDEN_NETS.items():
@@ -177,6 +196,10 @@ def main():
     )
     if ground_vias < 12:
         raise SystemExit(f"expected at least 12 GND stitching vias, found {ground_vias}")
+
+    paste_overlaps = via_in_paste(board)
+    if paste_overlaps:
+        raise SystemExit(f"via drill overlaps solder-paste aperture: {paste_overlaps}")
 
     limits = {
         "Buck_Coil": (3.0, 0),

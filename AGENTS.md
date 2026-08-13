@@ -38,6 +38,8 @@ Keep token use low on long PCB work:
 - R20/R21/R22 are 10 kΩ pull-ups for SDA, SCL, and MAX17048 ALERT.
 - L2 is a signal-free solid GND plane. L3 carries the 3V3 pour and low-speed signals.
 - At least twelve dedicated GND stitching vias connect the outer floods to L2.
+- No via drill overlaps an SMD solder-paste aperture; `verify.py` enforces this to prevent
+  accidental via-in-pad solder wicking.
 - The buck switch node is 1.83 mm and feedback is 4.91 mm with no feedback vias.
 - U3 is ADS1220 (TSSOP-16) with ratiometric bridge excitation from +3V3 (E+/REFP0) and
   E-/REFN0 on GND. Local AVDD/DVDD decoupling is C11 + C19.

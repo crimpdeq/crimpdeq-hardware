@@ -31,6 +31,9 @@ fp-info-cache
 *.dsn
 *.ses
 
+# Generated release artifacts
+/artifacts/
+
 # Exported BOM files
 *.xml
 

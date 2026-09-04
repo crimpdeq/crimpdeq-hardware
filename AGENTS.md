@@ -40,7 +40,9 @@ Keep token use low on long PCB work:
 - At least twelve dedicated GND stitching vias connect the outer floods to L2.
 - No via drill overlaps an SMD solder-paste aperture; `verify.py` enforces this to prevent
   accidental via-in-pad solder wicking.
-- The buck switch node is 1.83 mm and feedback is 4.91 mm with no feedback vias.
+- The buck switch node is 6.84 mm and feedback is 4.85 mm with no feedback vias.
+- U2, Q2, and D4 use datasheet top-view pad order on the back; U5 uses the standard KiCad
+  TDFN top-side geometry. `verify.py` enforces component-side pad order, side, and rotation.
 - U3 is ADS1220 (TSSOP-16) with ratiometric bridge excitation from +3V3 (E+/REFP0) and
   E-/REFN0 on GND. Local AVDD/DVDD decoupling is C11 + C19.
 - SPI to U3: GPIO5 `IO5_SCK`→SCLK, GPIO4 `IO4_MOSI`→DIN, GPIO3 `IO3_CS`→~CS,
@@ -131,7 +133,7 @@ and keep L2 signal-free. Do not autoroute across the ADS1220 AIN region or the a
 ## Manufacturing notes
 
 - Track only `pcb/crimpdeq/gerbers/crimpdeq.zip`, not loose Gerber files.
-- J3/J4 are bare cable pads and must be marked Do Not Place.
+- J5–J12 are bare cable pads and must be marked Do Not Place.
 - J2 includes plated through-hole shell tabs; assembly may require THT/manual soldering.
 - Re-check package, polarity, side, rotation, and manufacturer DFM before ordering.
 - Physical validation of power integrity, USB, ADS1220 noise, antenna performance, and connector

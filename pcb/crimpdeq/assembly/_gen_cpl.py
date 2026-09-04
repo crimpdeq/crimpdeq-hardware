@@ -14,20 +14,27 @@ EXPECTED_REFS = frozenset(
     "R1 R2 R3 R7 R8 R9 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 "
     "U1 U2 U3 U5 U6".split()
 )
-BOTTOM_UNMIRRORED_REFS = frozenset({"Q2", "U2"})
 TOP_ROTATION_OFFSETS = {"U3": 270.0, "U6": 180.0}
 # J2 uses the GCT body centroid. Cable pads J5-J12 are DNP THT pads.
 POSITION_OVERRIDES = {
     "J2": (147.0000, -78.5350),
 }
 CORRECTION_EXPECTATIONS = {
+    "D4": ("LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm", "bottom"),
     "J2": ("GCT_USB4105-GF-A", "top"),
     "Q2": ("SOT-23", "bottom"),
     "U2": ("SOT-23-5", "bottom"),
     "U3": ("TSSOP-16_4.4x5mm_P0.65mm", "top"),
+    "U5": ("TDFN-8-1EP_2x2mm_P0.5mm_EP0.8x1.2mm", "top"),
     "U6": ("SOT-23-5", "top"),
 }
-ROTATION_EXPECTATIONS = {"U6": 90.0}
+ROTATION_EXPECTATIONS = {
+    "D4": 90.0,
+    "Q2": 270.0,
+    "U2": 270.0,
+    "U5": 180.0,
+    "U6": 90.0,
+}
 
 
 def refkey(reference):
@@ -110,8 +117,6 @@ with out.open("w", newline="") as destination:
         rotation = float(row["Rot"])
         if side == "bottom":
             rotation = 180.0 - rotation
-            if reference in BOTTOM_UNMIRRORED_REFS:
-                rotation -= 180.0
         else:
             rotation += TOP_ROTATION_OFFSETS.get(reference, 0.0)
         rotation %= 360.0

@@ -3,11 +3,11 @@
 Assembly files for `../crimpdeq.kicad_pcb`.
 
 - `crimpdeq_bom.csv`: grouped BOM with LCSC part numbers.
-- `crimpdeq_cpl.csv`: 51 placements, 29 top / 22 bottom.
-- `J3` and `J4` are bare cable pads and must be marked Do Not Place.
+- `crimpdeq_cpl.csv`: 55 placements, 36 top / 19 bottom.
+- `J5`–`J12` are bare cable pads and must be marked Do Not Place.
 - R20/R21/R22 are 10 kΩ 0402 pull-ups using the same validated part as R1/R2/R14.
-- `_gen_cpl.py` converts KiCad positions to the JLC/Fabrication Toolkit convention and applies
-  the USB4105-GF-A body-centroid and distributed J4 centroid corrections.
+- `_gen_cpl.py` converts KiCad positions to the JLC/Fabrication Toolkit convention, applies
+  the USB4105-GF-A body-centroid correction, and validates critical package rotations.
 
 The schematic contains known LCSC placeholder reuse. `_gen_bom.py` applies the reviewed
 overrides and validates the three hardware pull-ups. Confirm package, polarity, stock, side,

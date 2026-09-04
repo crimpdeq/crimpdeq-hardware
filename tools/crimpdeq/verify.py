@@ -14,6 +14,32 @@ EXPECTED_REFS = frozenset(
     "U1 U2 U3 U5 U6".split()
 )
 
+COMPONENT_GEOMETRY = {
+    # Pad coordinates are normalized to the component side, so bottom-side
+    # packages can be compared directly with their datasheet top views.
+    "D4": (pcbnew.B_Cu, 90.0, ":LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm", {
+        "1": (-2.45, -1.65), "2": (-2.45, 1.65),
+        "3": (2.45, 1.65), "4": (2.45, -1.65),
+    }),
+    "Q2": (pcbnew.B_Cu, -90.0, ":SOT-23", {
+        "1": (-0.9375, -0.95), "2": (-0.9375, 0.95), "3": (0.9375, 0.0),
+    }),
+    "U2": (pcbnew.B_Cu, -90.0, ":SOT-23-5", {
+        "1": (-1.1375, -0.95), "2": (-1.1375, 0.0), "3": (-1.1375, 0.95),
+        "4": (1.1375, 0.95), "5": (1.1375, -0.95),
+    }),
+    "U5": (pcbnew.F_Cu, 180.0, ":TDFN-8-1EP_2x2mm_P0.5mm_EP0.8x1.2mm", {
+        "1": (-0.9875, -0.75), "2": (-0.9875, -0.25),
+        "3": (-0.9875, 0.25), "4": (-0.9875, 0.75),
+        "5": (0.9875, 0.75), "6": (0.9875, 0.25),
+        "7": (0.9875, -0.25), "8": (0.9875, -0.75), "9": (0.0, 0.0),
+    }),
+    "U6": (pcbnew.F_Cu, -90.0, ":SOT-23-5", {
+        "1": (-1.1375, -0.95), "2": (-1.1375, 0.0), "3": (-1.1375, 0.95),
+        "4": (1.1375, 0.95), "5": (1.1375, -0.95),
+    }),
+}
+
 GOLDEN_NETS = {
     "+3V3": (
         "C1.1 C2.1 C4.1 C9.1 C10.1 C11.1 C16.1 C17.1 C19.1 D3.1 D4.1 "
@@ -196,30 +222,37 @@ def main():
             f"U6 identity mismatch: value={u6.GetValue()}, "
             f"footprint={u6.GetFPIDAsString()}"
         )
-    expected_u6_pads = {
-        "1": (-1.1375, -0.95),
-        "2": (-1.1375, 0.0),
-        "3": (-1.1375, 0.95),
-        "4": (1.1375, 0.95),
-        "5": (1.1375, -0.95),
-    }
-    actual_u6_pads = {
-        number: (
-            mm(pad(u6, number).GetFPRelativePosition().x),
-            mm(pad(u6, number).GetFPRelativePosition().y),
-        )
-        for number in expected_u6_pads
-    }
-    bad_u6_pads = {
-        number: actual_u6_pads[number]
-        for number, expected_position in expected_u6_pads.items()
-        if math.dist(actual_u6_pads[number], expected_position) > 0.001
-    }
-    if bad_u6_pads:
-        raise SystemExit(
-            "U6 footprint handedness mismatch; expected SY8088IAAC top-view "
-            f"pin order 1-2-3/5-4, changed pads={bad_u6_pads}"
-        )
+    for reference, (expected_layer, expected_angle, footprint_suffix, expected_pads) in COMPONENT_GEOMETRY.items():
+        footprint = footprints[reference]
+        if footprint.GetLayer() != expected_layer:
+            raise SystemExit(
+                f"{reference} side mismatch: {pcbnew.LayerName(footprint.GetLayer())}"
+            )
+        angle_error = (footprint.GetOrientationDegrees() - expected_angle + 180.0) % 360.0 - 180.0
+        if abs(angle_error) > 0.01:
+            raise SystemExit(
+                f"{reference} orientation mismatch: "
+                f"{footprint.GetOrientationDegrees():.2f} degrees"
+            )
+        if not footprint.GetFPIDAsString().endswith(footprint_suffix):
+            raise SystemExit(
+                f"{reference} footprint mismatch: {footprint.GetFPIDAsString()}"
+            )
+
+        actual_pads = {}
+        for number in expected_pads:
+            position = pad(footprint, number).GetFPRelativePosition()
+            x, y = mm(position.x), mm(position.y)
+            actual_pads[number] = (x, -y if expected_layer == pcbnew.B_Cu else y)
+        bad_pads = {
+            number: actual_pads[number]
+            for number, expected_position in expected_pads.items()
+            if math.dist(actual_pads[number], expected_position) > 0.001
+        }
+        if bad_pads:
+            raise SystemExit(
+                f"{reference} component-side pad geometry mismatch: {bad_pads}"
+            )
 
     inner_ground_tracks = [
         item for item in board_tracks(board)

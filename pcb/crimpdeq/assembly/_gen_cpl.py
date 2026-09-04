@@ -27,6 +27,7 @@ CORRECTION_EXPECTATIONS = {
     "U3": ("TSSOP-16_4.4x5mm_P0.65mm", "top"),
     "U6": ("SOT-23-5", "top"),
 }
+ROTATION_EXPECTATIONS = {"U6": 90.0}
 
 
 def refkey(reference):
@@ -114,6 +115,13 @@ with out.open("w", newline="") as destination:
         else:
             rotation += TOP_ROTATION_OFFSETS.get(reference, 0.0)
         rotation %= 360.0
+        if reference in ROTATION_EXPECTATIONS:
+            expected_rotation = ROTATION_EXPECTATIONS[reference]
+            if abs((rotation - expected_rotation + 180.0) % 360.0 - 180.0) > 0.01:
+                raise SystemExit(
+                    f"{reference} assembly rotation mismatch: "
+                    f"actual={rotation:.2f}, expected={expected_rotation:.2f}"
+                )
 
         x = float(row["PosX"])
         y = float(row["PosY"])

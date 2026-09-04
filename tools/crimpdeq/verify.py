@@ -64,14 +64,20 @@ def mm(value):
     return pcbnew.ToMM(value)
 
 
+def board_tracks(board):
+    """Return tracks without relying on the broken Python 3.14 SWIG iterator."""
+    items = board.Tracks()
+    return [items[index] for index in range(items.size())]
+
+
 def net_metrics(board, net_name):
     length = 0.0
     vias = 0
     layers = set()
-    for item in board.GetTracks():
+    for item in board_tracks(board):
         if item.GetNetname() != net_name:
             continue
-        if isinstance(item, pcbnew.PCB_VIA):
+        if item.Type() == pcbnew.PCB_VIA_T:
             vias += 1
         else:
             start, end = item.GetStart(), item.GetEnd()
@@ -89,19 +95,20 @@ def pad(footprint, number):
 
 def via_in_paste(board):
     overlaps = []
-    for item in board.GetTracks():
-        if not isinstance(item, pcbnew.PCB_VIA):
+    for item in board_tracks(board):
+        if item.Type() != pcbnew.PCB_VIA_T:
             continue
-        radius = item.GetDrillValue() // 2
+        via = pcbnew.Cast_to_PCB_VIA(item)
+        radius = via.GetDrillValue() // 2
         for footprint in board.GetFootprints():
             for layer in (pcbnew.F_Paste, pcbnew.B_Paste):
                 if footprint.GetLayer() not in (pcbnew.F_Cu, pcbnew.B_Cu):
                     continue
                 for pad_item in footprint.Pads():
-                    if pad_item.GetEffectiveShape(layer).Collide(item.GetPosition(), radius):
+                    if pad_item.GetEffectiveShape(layer).Collide(via.GetPosition(), radius):
                         overlaps.append(
                             f"{footprint.GetReference()}.{pad_item.GetPadName()}@"
-                            f"({mm(item.GetPosition().x):.3f},{mm(item.GetPosition().y):.3f})"
+                            f"({mm(via.GetPosition().x):.3f},{mm(via.GetPosition().y):.3f})"
                         )
     return overlaps
 
@@ -183,16 +190,47 @@ def main():
     if "TSSOP-16" not in u3.GetFPIDAsString():
         raise SystemExit(f"U3 footprint mismatch: {u3.GetFPIDAsString()}")
 
+    u6 = footprints["U6"]
+    if u6.GetValue() != "SY8088" or not u6.GetFPIDAsString().endswith(":SOT-23-5"):
+        raise SystemExit(
+            f"U6 identity mismatch: value={u6.GetValue()}, "
+            f"footprint={u6.GetFPIDAsString()}"
+        )
+    expected_u6_pads = {
+        "1": (-1.1375, -0.95),
+        "2": (-1.1375, 0.0),
+        "3": (-1.1375, 0.95),
+        "4": (1.1375, 0.95),
+        "5": (1.1375, -0.95),
+    }
+    actual_u6_pads = {
+        number: (
+            mm(pad(u6, number).GetFPRelativePosition().x),
+            mm(pad(u6, number).GetFPRelativePosition().y),
+        )
+        for number in expected_u6_pads
+    }
+    bad_u6_pads = {
+        number: actual_u6_pads[number]
+        for number, expected_position in expected_u6_pads.items()
+        if math.dist(actual_u6_pads[number], expected_position) > 0.001
+    }
+    if bad_u6_pads:
+        raise SystemExit(
+            "U6 footprint handedness mismatch; expected SY8088IAAC top-view "
+            f"pin order 1-2-3/5-4, changed pads={bad_u6_pads}"
+        )
+
     inner_ground_tracks = [
-        item for item in board.GetTracks()
-        if not isinstance(item, pcbnew.PCB_VIA) and item.GetLayer() == pcbnew.In1_Cu
+        item for item in board_tracks(board)
+        if item.Type() != pcbnew.PCB_VIA_T and item.GetLayer() == pcbnew.In1_Cu
     ]
     if inner_ground_tracks:
         raise SystemExit(f"L2 must be signal-free; found {len(inner_ground_tracks)} tracks")
 
     ground_vias = sum(
-        isinstance(item, pcbnew.PCB_VIA) and item.GetNetname() == "GND"
-        for item in board.GetTracks()
+        item.Type() == pcbnew.PCB_VIA_T and item.GetNetname() == "GND"
+        for item in board_tracks(board)
     )
     if ground_vias < 12:
         raise SystemExit(f"expected at least 12 GND stitching vias, found {ground_vias}")
@@ -202,7 +240,9 @@ def main():
         raise SystemExit(f"via drill overlaps solder-paste aperture: {paste_overlaps}")
 
     limits = {
-        "Buck_Coil": (3.0, 0),
+        # Correct pin 3 is on U6's far side; this route goes around the
+        # package and its local GND fanout without changing layers.
+        "Buck_Coil": (7.0, 0),
         "Net-(U6-FB)": (8.0, 0),
         "Net-(U3-AIN0)": (16.0, 0),
         "Net-(U3-AIN1)": (16.0, 0),

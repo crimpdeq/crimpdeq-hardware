@@ -16,6 +16,25 @@ Konnect requires a file-based operation, invoke the Konnect tool and let it perf
 the required tool is unavailable, stop and report the limitation rather than editing the source
 directly.
 
+### MCP configuration
+
+Keep the shared `.mcp.json` committed. Each checkout used with Pi must also have an ignored,
+machine-local `.pi/mcp.json` whose `command` points to the installed Konnect executable by
+absolute path. For this macOS installation:
+
+```json
+{
+  "mcpServers": {
+    "konnect": {
+      "command": "/Users/sergio/Documents/KiCad/10.0/3rdparty/plugins/com_github_mixelpixx_konnect/bin/konnect"
+    }
+  }
+}
+```
+
+Update the absolute path when Konnect is installed elsewhere. Do not commit `.pi/mcp.json` because
+it is machine-specific.
+
 At the start of PCB work:
 
 1. Call `list_toolboxes` to discover the tools available in the current Konnect installation.

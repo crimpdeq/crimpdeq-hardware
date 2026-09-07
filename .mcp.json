@@ -1,0 +1,18 @@
+{
+  "settings": {
+    "strictDirectToolArguments": true,
+    "freezeDirectTools": false,
+    "outputGuard": true,
+    "warnOnLargeDirectTools": true,
+    "mcpFooterStatus": "compact"
+  },
+  "mcpServers": {
+    "konnect": {
+      "command": "konnect",
+      "lifecycle": "keep-alive",
+      "directTools": true,
+      "toolPrefix": "none",
+      "requestTimeoutMs": 300000
+    }
+  }
+}

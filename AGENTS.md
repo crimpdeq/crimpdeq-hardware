@@ -1,10 +1,77 @@
 # Crimpdeq PCB Agent Handoff
 
-The single canonical KiCad project lives at `pcb/crimpdeq/`. Shared footprints are under
-`libraries/` and datasheets are under `pcb/datasheets/`.
+This is a KiCad 10 hardware project. The single canonical KiCad project lives at
+`pcb/crimpdeq/`. Shared footprints are under `libraries/` and datasheets are under
+`pcb/datasheets/`.
 
 Do not create versioned design directories. Update the canonical project only when the user
-explicitly requests a design change, and use Konnect MCP tools for all KiCad source changes.
+explicitly requests a design change.
+
+## Konnect workflow
+
+Use Konnect for every KiCad operation for which an appropriate Konnect tool exists. Never edit
+`.kicad_pcb`, `.kicad_sch`, `.kicad_pro`, `.kicad_sym`, `.kicad_mod`, `fp-lib-table`, or
+`sym-lib-table` files with text editors, shell scripts, or generic file-writing tools. When
+Konnect requires a file-based operation, invoke the Konnect tool and let it perform the write. If
+the required tool is unavailable, stop and report the limitation rather than editing the source
+directly.
+
+### MCP configuration
+
+Keep the shared `.mcp.json` committed. Each checkout used with Pi must also have an ignored,
+machine-local `.pi/mcp.json` whose `command` points to the installed Konnect executable by
+absolute path. For this macOS installation:
+
+```json
+{
+  "mcpServers": {
+    "konnect": {
+      "command": "/Users/sergio/Documents/KiCad/10.0/3rdparty/plugins/com_github_mixelpixx_konnect/bin/konnect"
+    }
+  }
+}
+```
+
+Update the absolute path when Konnect is installed elsewhere. Do not commit `.pi/mcp.json` because
+it is machine-specific.
+
+At the start of PCB work:
+
+1. Call `list_toolboxes` to discover the tools available in the current Konnect installation.
+2. Verify the KiCad installation and connection with `get_installation_info` and `open_project`.
+   If either tool is unavailable, report that explicitly before continuing.
+3. Load user and project configuration with `load_user_config` and `load_project_config`, then use
+   `get_effective_config` for design decisions.
+4. Confirm that the intended project and board are open. Do not assume the board currently open in
+   KiCad belongs to this working tree.
+5. Inspect the board before making changes.
+6. Load only the toolsets required for the current task. Unload toolsets when switching to a
+   different phase of work.
+
+Before modifying the PCB:
+
+- Inspect the current board and the affected components, pads, nets, rules, and geometry.
+- Run placement and design-rule checks where applicable.
+- Briefly explain the intended changes before applying them.
+- Preserve unrelated local changes and existing design intent.
+
+During layout:
+
+- Prefer live KiCad IPC operations.
+- Preserve locked items unless the user explicitly asks to alter them.
+- Do not change the schematic, board outline, or component footprints unless explicitly requested.
+- Keep changes focused and use the smallest appropriate Konnect operation.
+
+After a meaningful layout change:
+
+1. Re-inspect the affected area and resulting board state.
+2. Run DRC.
+3. Resolve errors caused by the change.
+4. Do not suppress or waive DRC violations without explaining the specific reason.
+5. Save through KiCad/Konnect and confirm the project still opens normally.
+
+Never generate manufacturing outputs or apply a large autorouter result unless explicitly
+requested. Keep the project in a state that can be opened normally by KiCad.
 
 ## Session efficiency
 
@@ -95,18 +162,18 @@ kicad-cli sch erc --severity-error --output /tmp/crimpdeq_erc.txt \
 kicad-cli pcb drc --refill-zones --severity-error --schematic-parity \
   --output /tmp/crimpdeq_drc.txt "$BOARD"
 "$PY" tools/crimpdeq/verify.py "$BOARD"
-"$PY" "$DESIGN/assembly/_gen_bom.py"
-"$PY" "$DESIGN/assembly/_gen_cpl.py"
 ```
 
-Use `kicad-cli` for exports and checks. Use the bundled KiCad Python only for the existing
-verification and assembly scripts; do not directly edit KiCad source files with text tools.
+Prefer the corresponding Konnect ERC and DRC tools when available. Use these CLI checks only when
+Konnect does not provide the required operation. Run the assembly BOM/CPL generators only when the
+user explicitly requests updated manufacturing outputs. Use the bundled KiCad Python only for the
+existing verification and assembly scripts; never use it to edit KiCad source files directly.
 
 ## Autorouting (optional)
 
-Do not commit JREs or Freerouting jars. Prefer Konnect `autoroute` / `check_freerouting` when
-those tools are loaded. If you need a local run, download into gitignored `.tools/` and delete
-when finished.
+Do not run an autorouter or apply a large autorouter result unless explicitly requested. When
+requested, prefer Konnect `autoroute` / `check_freerouting`. Do not commit JREs or Freerouting
+jars. If a local run is required, download into gitignored `.tools/` and delete it when finished.
 
 ```sh
 # From the repository root (Apple Silicon macOS example)

@@ -150,6 +150,15 @@ Keep token use low on long PCB work:
   E-/REFN0 on GND. Local AVDD/DVDD decoupling is C11 + C19.
 - SPI to U3: GPIO5 `IO5_SCK`→SCLK, GPIO4 `IO4_MOSI`→DIN, GPIO3 `IO3_CS`→~CS,
   GPIO1 `IO1_MISO`→DOUT/~DRDY. CLK is grounded; dedicated ~DRDY is unused.
+- Analog filter cluster: C12 `(137.200, 74.100)` rot 180; R7
+  `(137.975, 75.800)` / R8 `(136.425, 75.800)` rot −90; AIN0/AIN1 both 7.338 mm,
+  0 vias, F.Cu; +3V3 stitch via `(137.400, 71.750)`.
+- USB D+/D−: 41.49875 / 41.49829 mm, Δ 0.000459 mm; 3 vias each on
+  B.Cu/F.Cu/In2.Cu. J2 vias `(146.965, 77.0322)` / `(147.65, 77.85)`; U1 vias
+  `(136.802, 61.026)` / `(134.245, 62.331)`. Canonical SHA `96043150…`; pre-USB
+  analog backup `ae89cc72…`. Not a 90 Ω stackup claim.
+- Schematic R7/R8 `Value` is `100R 1%` but instance LCSC is `C25741` (the 100 kΩ
+  BOM line). Assembly CSV uses `C25076`. Do not edit unless asked.
 - Load-cell pads are grouped on the bottom edge near U3; battery/switch pads are on the right.
 - The ESP32 antenna and USB body retain their intentional board-edge overhangs.
 

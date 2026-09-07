@@ -9,12 +9,25 @@ explicitly requests a design change.
 
 ## Konnect workflow
 
-Use Konnect for every KiCad operation for which an appropriate Konnect tool exists. Never edit
-`.kicad_pcb`, `.kicad_sch`, `.kicad_pro`, `.kicad_sym`, `.kicad_mod`, `fp-lib-table`, or
-`sym-lib-table` files with text editors, shell scripts, or generic file-writing tools. When
-Konnect requires a file-based operation, invoke the Konnect tool and let it perform the write. If
-the required tool is unavailable, stop and report the limitation rather than editing the source
-directly.
+Prefer Konnect for KiCad operations, including its supported file-based edits. When no suitable
+Konnect tool exists or a tool cannot safely complete the requested operation, the agent may edit
+`.kicad_pcb`, `.kicad_sch`, `.kicad_pro`, `.kicad_sym`, `.kicad_mod`, `fp-lib-table`, and
+`sym-lib-table` directly using KiCad APIs, format-aware scripts, or precise text edits.
+
+For direct file edits:
+
+- Explain the tool limitation and intended fallback before writing. Stay within the user's
+  requested design change; this permission does not authorize unrelated repairs.
+- Save and close every affected KiCad editor first. Never overwrite a file whose live editor
+  may hold unsaved changes. Confirm any lock is stale before removing it.
+- Back up the affected files outside the canonical project directory before editing, and check
+  that the source files have not changed since inspection before replacing them.
+- Prefer KiCad APIs or format-aware editing. Preserve UUIDs, schematic identities, pad-to-net
+  connectivity, routing, placement, and unrelated content unless explicitly changing them.
+- For net renames, update all affected pads, tracks, vias, zones, labels, rules, and verification
+  expectations consistently; prove connectivity is unchanged apart from the requested rename.
+- Reopen the design in KiCad, run applicable ERC/DRC and `verify.py`, and inspect the result.
+  Resolve new violations without suppressing checks. Report any remaining verification limits.
 
 ### MCP configuration
 
@@ -49,8 +62,9 @@ At the start of PCB work:
    when IPC is down; live PCB edits require KiCad running with this board open.
 3. Load user and project configuration with `load_user_config` and `load_project_config`, then use
    `get_effective_config` for design decisions.
-4. Confirm that the intended project and board are open. Do not assume the board currently open in
-   KiCad belongs to this working tree.
+4. Confirm the intended project and board paths. For live operations, verify that the correct
+   board is open; for direct file edits, verify that the affected editors are closed. Do not
+   assume a board currently open in KiCad belongs to this working tree.
 5. Inspect the board before making changes.
 6. Load only the toolsets required for the current task. Unload toolsets when switching to a
    different phase of work.
@@ -67,7 +81,8 @@ During layout:
 - Prefer live KiCad IPC operations.
 - Preserve locked items unless the user explicitly asks to alter them.
 - Do not change the schematic, board outline, or component footprints unless explicitly requested.
-- Keep changes focused and use the smallest appropriate Konnect operation.
+- Keep changes focused and use the smallest appropriate Konnect operation or the controlled
+  direct-file fallback described above.
 
 After a meaningful layout change:
 
@@ -75,7 +90,8 @@ After a meaningful layout change:
 2. Run DRC.
 3. Resolve errors caused by the change.
 4. Do not suppress or waive DRC violations without explaining the specific reason.
-5. Save through KiCad/Konnect and confirm the project still opens normally.
+5. Save through KiCad/Konnect for live edits. For direct edits, reopen the saved files in KiCad
+   and confirm the project loads normally.
 
 Never generate manufacturing outputs or apply a large autorouter result unless explicitly
 requested. Keep the project in a state that can be opened normally by KiCad.
@@ -90,7 +106,8 @@ Keep token use low on long PCB work:
   dumping whole `.kicad_pcb` / `.kicad_sch` / netlist files into context.
 - Consult the searchable Markdown datasheets in `pcb/datasheets/` for component-specific
   electrical, layout, package, and application guidance before relying on external sources.
-- Do not `git diff` the board or schematic in-session; trust DRC, ERC, and `verify.py` output.
+- Avoid dumping full board or schematic diffs into context. For direct edits, inspect a focused
+  diff or structured before/after comparison alongside DRC, ERC, and `verify.py` output.
 - Keep Freerouting/Java downloads in gitignored `.tools/` only; delete when done. Do not open
   autorouter logs in the IDE during the chat.
 - Prefer Konnect `autoroute` when available; bound local autoroute retries (stop after a few
@@ -107,9 +124,21 @@ Keep token use low on long PCB work:
 - Project: `pcb/crimpdeq/crimpdeq.kicad_pro`
 - Four copper layers; 30.00 x 30.00 mm nominal outline.
 - 55 components: 36 front / 19 back.
+- All 55 footprints have unique schematic symbol paths matching the saved schematic. C11,
+  C19, J11, J12, and U3 were relinked without changing placement, routing, or pad nets.
+  `verify.py` rejects missing or duplicate symbol paths. This does not resolve the separate
+  routed-net naming mismatches (`Buck_Coil` vs `/Buck_Coil`, and U3's AIN0 name).
 - U1 antenna and D4 LED are on the back; J2 USB-C and U3 ADS1220 are on the front.
 - U1 ground pins 37–53 are connected to GND.
-- R20/R21/R22 are 10 kΩ pull-ups for SDA, SCL, and MAX17048 ALERT.
+- MAX17048 U5 TDFN pad 7 is SCL (`IO6_SCL`) and pad 8 is SDA (`IO7_SDA`).
+  Wiring: GPIO6 → U5.7 SCL; GPIO7 → U5.8 SDA. Firmware in
+  `../crimpdeq-firmware/src/main.rs` uses GPIO7=SDA and GPIO6=SCL.
+  Coordinate any future pin-map change with that firmware. The I²C names
+  were corrected as metadata only (copper and GPIO numbers unchanged).
+  Post-rename ERC, error-severity DRC with schematic parity, and
+  `verify.py` are green.
+- R20/R21/R22 are 10 kΩ pull-ups for SCL, SDA, and MAX17048 ALERT, respectively.
+  `verify.py` preserves these pad-to-net assignments.
 - L2 is a signal-free solid GND plane. L3 carries the 3V3 pour and low-speed signals.
 - At least twelve dedicated GND stitching vias connect the outer floods to L2.
 - No via drill overlaps an SMD solder-paste aperture; `verify.py` enforces this to prevent
@@ -171,10 +200,14 @@ kicad-cli pcb drc --refill-zones --severity-error --schematic-parity \
 "$PY" tools/crimpdeq/verify.py "$BOARD"
 ```
 
+On this Linux checkout, `kicad-cli` is `/usr/bin/kicad-cli` and KiCad Python is
+`/usr/bin/python3` with `pcbnew.py` at `/usr/lib/python3.14/site-packages/pcbnew.py`.
+
 Prefer the corresponding Konnect ERC and DRC tools when available. Use these CLI checks only when
 Konnect does not provide the required operation. Run the assembly BOM/CPL generators only when the
-user explicitly requests updated manufacturing outputs. Use the bundled KiCad Python only for the
-existing verification and assembly scripts; never use it to edit KiCad source files directly.
+user explicitly requests updated manufacturing outputs. Use a Python environment compatible with
+this KiCad installation for verification, assembly scripts, and KiCad API edits. Direct source
+edits must follow the safeguards in the Konnect workflow above.
 
 ## Autorouting (optional)
 

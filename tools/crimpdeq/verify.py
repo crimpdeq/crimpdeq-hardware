@@ -65,8 +65,8 @@ GOLDEN_NETS = {
     "IO3_CS": "U1.6 U3.2",
     "IO4_MOSI": "U1.18 U3.16",
     "IO5_SCK": "U1.19 U3.1",
-    "IO6_SDA": "R20.1 U1.20 U5.7",
-    "IO7_SCL": "R21.1 U1.21 U5.8",
+    "IO6_SCL": "R20.1 U1.20 U5.7",
+    "IO7_SDA": "R21.1 U1.21 U5.8",
     "Net-(D1-K)": "D1.1 R3.2",
     "Net-(D4-DIN)": "D4.4 R13.2",
     "Net-(D8-A)": "D8.2 D9.1 J2.A4_B9 J2.B4_A9",
@@ -177,6 +177,21 @@ def verify_golden_netlist(footprints):
     return len(actual)
 
 
+def verify_schematic_links(footprints):
+    """Reject missing or duplicate symbol paths before a PCB sync can misidentify parts."""
+    references_by_path = {}
+    for reference, footprint in footprints.items():
+        path = footprint.GetPath().AsString()
+        if path in ("", "/"):
+            raise SystemExit(f"{reference} has no schematic symbol path")
+        if path in references_by_path:
+            raise SystemExit(
+                f"duplicate schematic symbol path {path}: "
+                f"{references_by_path[path]} and {reference}"
+            )
+        references_by_path[path] = reference
+
+
 def main():
     if len(sys.argv) != 2:
         raise SystemExit("usage: verify.py BOARD")
@@ -188,6 +203,7 @@ def main():
             f"extra={sorted(set(footprints) - EXPECTED_REFS)}"
         )
 
+    verify_schematic_links(footprints)
     connected_pads = verify_golden_netlist(footprints)
 
     bounds = board.GetBoardEdgesBoundingBox()
@@ -202,7 +218,7 @@ def main():
     if bad_u1_ground:
         raise SystemExit(f"U1 ground pads not connected to GND: {bad_u1_ground}")
 
-    expected_pullups = {"R20": "IO6_SDA", "R21": "IO7_SCL", "R22": "IO10_ALRT"}
+    expected_pullups = {"R20": "IO6_SCL", "R21": "IO7_SDA", "R22": "IO10_ALRT"}
     for reference, signal in expected_pullups.items():
         footprint = footprints[reference]
         actual = (footprint.GetValue(), pad(footprint, "1").GetNetname(), pad(footprint, "2").GetNetname())

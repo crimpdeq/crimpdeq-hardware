@@ -42,6 +42,7 @@ fp-info-cache
 
 # Local project settings
 *.kicad_prl
+.pi/mcp.json
 
 # Local Freerouting / JRE downloads (see AGENTS.md — do not commit)
 .tools/

@@ -989,10 +989,10 @@
 						)
 					)
 				)
-				(pin bidirectional line
+				(pin input line
 					(at 12.7 2.54 180)
 					(length 2.54)
-					(name "SDA"
+					(name "SCL"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1007,10 +1007,10 @@
 						)
 					)
 				)
-				(pin input line
+				(pin bidirectional line
 					(at 12.7 5.08 180)
 					(length 2.54)
-					(name "SCL"
+					(name "SDA"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -9616,7 +9616,7 @@
 			)
 		)
 	)
-	(global_label "IO7_SCL"
+	(global_label "IO7_SDA"
 		(shape bidirectional)
 		(at 57.15 57.15 180)
 		(effects
@@ -9639,7 +9639,7 @@
 			)
 		)
 	)
-	(global_label "IO6_SDA"
+	(global_label "IO6_SCL"
 		(shape bidirectional)
 		(at 185.42 106.68 180)
 		(effects
@@ -9708,7 +9708,7 @@
 			)
 		)
 	)
-	(global_label "IO6_SDA"
+	(global_label "IO6_SCL"
 		(shape bidirectional)
 		(at 57.15 54.61 180)
 		(effects
@@ -9799,7 +9799,7 @@
 			)
 		)
 	)
-	(global_label "IO7_SCL"
+	(global_label "IO7_SDA"
 		(shape bidirectional)
 		(at 162.56 106.68 0)
 		(effects
@@ -9868,7 +9868,7 @@
 			)
 		)
 	)
-	(global_label "IO6_SDA"
+	(global_label "IO6_SCL"
 		(shape bidirectional)
 		(at 162.56 109.22 0)
 		(effects
@@ -9958,7 +9958,7 @@
 			)
 		)
 	)
-	(global_label "IO7_SCL"
+	(global_label "IO7_SDA"
 		(shape bidirectional)
 		(at 185.42 113.03 180)
 		(effects

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the design-local JLCPCB BOM from its board and schematic."""
+"""Generate the design-local PCBWay BOM from its board and schematic."""
 
 import csv
 import re
@@ -92,6 +92,33 @@ def refkey(reference):
     return (match.group(1), int(match.group(2))) if match else (reference, 0)
 
 
+def mount_type(footprint):
+    reference = footprint.GetReference()
+    if reference == "J2":
+        return "Hybrid"
+    attrs = footprint.GetAttributes()
+    smd = bool(attrs & pcbnew.FP_SMD)
+    tht = bool(attrs & pcbnew.FP_THROUGH_HOLE)
+    if smd and tht:
+        return "Hybrid"
+    if tht:
+        return "THT"
+    if smd:
+        return "SMD"
+    name = footprint.GetFPID().GetLibItemName().wx_str()
+    if "THT" in name:
+        return "THT"
+    return "SMD"
+
+
+def part_notes(reference):
+    if reference in DNP_REFS:
+        return "Do Not Place"
+    if reference == "J2":
+        return "PTH shell tabs; THT/manual soldering"
+    return ""
+
+
 version_dir = Path(__file__).resolve().parents[1]
 design_name = version_dir.name
 project_name = "crimpdeq"
@@ -172,27 +199,43 @@ for reference in sorted(footprints, key=refkey):
     code = lcsc.get(reference, "")
     if not code and reference not in DNP_REFS:
         blank_non_dnp_refs.append(reference)
-    parts.append((reference, value, footprint_name, code))
+    parts.append(
+        (
+            reference,
+            value,
+            footprint_name,
+            code,
+            mount_type(footprint),
+            part_notes(reference),
+        )
+    )
 
 if blank_non_dnp_refs:
     raise SystemExit(f"BOM validation failed; blank non-DNP refs={blank_non_dnp_refs}")
 
 groups = {}
-for reference, value, footprint_name, code in parts:
-    groups.setdefault((value, footprint_name, code), []).append(reference)
+for reference, value, footprint_name, code, kind, notes in parts:
+    groups.setdefault((value, footprint_name, code, kind, notes), []).append(reference)
 
 rows = []
-for (value, footprint_name, code), references in groups.items():
-    designators = ",".join(sorted(references, key=refkey))
-    rows.append((value, designators, footprint_name, code))
+for (value, footprint_name, code, kind, notes), references in groups.items():
+    ordered = sorted(references, key=refkey)
+    rows.append((value, ",".join(ordered), len(ordered), footprint_name, code, kind, notes))
 rows.sort(key=lambda row: refkey(row[1].split(",")[0]))
 
 with out.open("w", newline="") as destination:
     writer = csv.writer(destination, lineterminator="\n")
-    writer.writerow(["Comment", "Designator", "Footprint", "LCSC Part #"])
-    writer.writerows(rows)
+    writer.writerow(
+        ["Item", "Quantity", "Designator", "Value", "Footprint", "MPN", "Type", "Notes"]
+    )
+    for item, (value, designators, quantity, footprint_name, code, kind, notes) in enumerate(
+        rows, start=1
+    ):
+        writer.writerow(
+            [item, quantity, designators, value, footprint_name, code, kind, notes]
+        )
 
-filled = sum(1 for reference, _, _, code in parts if code)
+filled = sum(1 for reference, _, _, code, _, _ in parts if code)
 print(f"BOM written: {out}")
-print(f"  grouped lines: {len(rows)}   placements: {len(parts)}   with LCSC: {filled}/{len(parts)}")
+print(f"  grouped lines: {len(rows)}   placements: {len(parts)}   with MPN: {filled}/{len(parts)}")
 print(f"  DNP cable pads: {', '.join(sorted(DNP_REFS))}")

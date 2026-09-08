@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the canonical design's JLCPCB component placement list."""
+"""Generate the canonical design's PCBWay component placement list."""
 
 import csv
 import re

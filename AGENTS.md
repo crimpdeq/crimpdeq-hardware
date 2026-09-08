@@ -122,7 +122,7 @@ Keep token use low on long PCB work:
 - KiCad source and rules: `pcb/crimpdeq/crimpdeq.{kicad_pcb,kicad_pro,kicad_dru,kicad_sch}`
 - Gerber ZIP: `pcb/crimpdeq/gerbers/crimpdeq.zip`
 - Assembly BOM/CPL: `pcb/crimpdeq/assembly/crimpdeq_{bom,cpl}.csv`
-- DFM report: `pcb/crimpdeq/reports/crimpdeq_jlc_tht_to_smd.md`
+- DFM report: `pcb/crimpdeq/reports/crimpdeq_pcbway_tht_to_smd.md`
 - Component datasheets: `pcb/datasheets/*.md`
 - Invariant checker: `tools/crimpdeq/verify.py`
 

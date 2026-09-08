@@ -35,11 +35,18 @@ absolute path. For this macOS installation:
 Update the absolute path when Konnect is installed elsewhere. Do not commit `.pi/mcp.json` because
 it is machine-specific.
 
+Cursor should use the same absolute Konnect path in `~/.cursor/mcp.json` (and optional
+project `.cursor/mcp.json`). Do not pass `--config` unless that file exists. Committed
+`.mcp.json` keeps `command: "konnect"` for Pi; that name is not on PATH in this checkout,
+so Cursor must not rely on it.
+
 At the start of PCB work:
 
 1. Call `list_toolboxes` to discover the tools available in the current Konnect installation.
-2. Verify the KiCad installation and connection with `get_installation_info` and `open_project`.
-   If either tool is unavailable, report that explicitly before continuing.
+2. Confirm the project with `get_project_info` on `pcb/crimpdeq/crimpdeq.kicad_pro`, then check
+   KiCad IPC with `open_project` (pass the same project path). If `open_project` itself is
+   unavailable, report that explicitly before continuing. File-based schematic work can proceed
+   when IPC is down; live PCB edits require KiCad running with this board open.
 3. Load user and project configuration with `load_user_config` and `load_project_config`, then use
    `get_effective_config` for design decisions.
 4. Confirm that the intended project and board are open. Do not assume the board currently open in

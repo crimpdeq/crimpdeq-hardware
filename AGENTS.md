@@ -45,9 +45,10 @@ later user messages in the same session unless a call fails or KiCad/Konnect res
    is open; for direct file edits, verify the affected editors are closed. Do not assume a
    board open in KiCad belongs to this working tree.
 5. Inspect the board before making changes.
-6. Load every toolset you expect to need for the session's phase in one step, then keep the
-   tool list stable. Avoid unload/reload cycles: each tool-list change invalidates the prompt
-   cache for the whole conversation that follows it.
+6. In the first tool call, before any other substantial reads or work, load every toolset
+   you expect to need for the session's phase, then keep the tool list stable. Avoid
+   unload/reload cycles: each tool-list change invalidates the prompt cache for the whole
+   conversation that follows it.
 
 Before modifying the PCB: inspect the affected components, pads, nets, rules, and geometry;
 run placement and design-rule checks where applicable; briefly explain the intended changes;
@@ -72,6 +73,17 @@ explicitly requested.
 - Batch repeated queries (component pads, nets, traces) into a single `mcpScript` call that
   loops and filters, returning only a summary, instead of many individual tool calls. Each
   individual call costs a full model turn over the whole conversation.
+- Search files with `rg` and read only the matching section or line range. Do not load an
+  entire report, README, checker, or generated file into context unless the whole file is
+  required.
+- When iterating on a local script (router driver, checker, generator), run the edit-run-fix
+  cycle inside a single shell command where safe: retry internally until checks pass or a
+  real blocker appears, then return only the final diff, validation output, and any blocker.
+  Do not spend one model turn per attempt. Design-file edits still follow the Konnect
+  workflow safeguards above.
+- If KiCad IPC is unavailable, attempt recovery once, then switch to the file-based workflow
+  or ask the user to start KiCad with IPC enabled. Do not spend multiple turns on IPC
+  recovery.
 - Read each relevant datasheet section in `pcb/datasheets/` once, then reference it. Do not
   re-read the same section later in the session.
 - Avoid dumping full board or schematic diffs into context; inspect a focused diff or
@@ -122,6 +134,8 @@ Generate previews on demand with Konnect; do not commit generated render files:
 - Schematic: `konnect_get_schematic_view` with `schematic: pcb/crimpdeq/crimpdeq.kicad_sch`.
 - PCB: `konnect_get_board_2d_view` with `board: pcb/crimpdeq/crimpdeq.kicad_pcb` and the
   desired `width`/`height` (top-down 3D render, not a layer plot).
+- Request cropped, downscaled renders (around 800 px wide) sized to the question being
+  answered, and do not reread an identical render that is already in context.
 
 If a preview must be saved, keep it under `/tmp` and delete it after use.
 

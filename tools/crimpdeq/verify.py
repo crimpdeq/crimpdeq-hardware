@@ -192,6 +192,30 @@ def verify_schematic_links(footprints):
         references_by_path[path] = reference
 
 
+def verify_usb_geometry(board):
+    """Reject duplicate collinear copper in the USB pair's inner-layer routes."""
+    for net_name in ("USB_D+", "USB_D-"):
+        segments = [
+            item for item in board_tracks(board)
+            if item.GetNetname() == net_name and item.GetLayer() == pcbnew.In2_Cu
+        ]
+        for index, first in enumerate(segments):
+            a, b = first.GetStart(), first.GetEnd()
+            if a.y != b.y:
+                continue
+            first_low, first_high = sorted((a.x, b.x))
+            for second in segments[index + 1 :]:
+                c, d = second.GetStart(), second.GetEnd()
+                if c.y != d.y or c.y != a.y:
+                    continue
+                second_low, second_high = sorted((c.x, d.x))
+                overlap = min(first_high, second_high) - max(first_low, second_low)
+                if overlap > pcbnew.FromMM(0.001):
+                    raise SystemExit(
+                        f"{net_name} has {mm(overlap):.3f} mm collinear overlap on In2.Cu"
+                    )
+
+
 def verify_analog_corridor(board, footprints):
     """Keep digital copper on every layer out of the projected AIN/filter corridor."""
     tracks = board_tracks(board)
@@ -233,6 +257,7 @@ def main():
 
     verify_schematic_links(footprints)
     connected_pads = verify_golden_netlist(footprints)
+    verify_usb_geometry(board)
     verify_analog_corridor(board, footprints)
 
     bounds = board.GetBoardEdgesBoundingBox()

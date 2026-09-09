@@ -681,6 +681,7 @@
 		(path "/8de54e04-d2b0-4ada-87eb-08059e46c463")
 		(sheetname "/")
 		(sheetfile "crimpdeq.kicad_sch")
+		(attr dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -923,7 +924,6 @@
 					(size 0.5 0.5)
 					(thickness 0.08)
 				)
-				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -1480,7 +1480,6 @@
 					(size 0.4 0.4)
 					(thickness 0.06)
 				)
-				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -2030,7 +2029,6 @@
 					(size 0.4 0.4)
 					(thickness 0.06)
 				)
-				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -2071,7 +2069,7 @@
 		(descr "TSSOP, 16 Pin (https://www.jedec.org/document_search?search_api_views_fulltext=MO-153)")
 		(tags "TSSOP SO JEDEC-MO-153-AB Texas_PW0016A Microchip-ST Toshiba-TSSOP16-P-0044-0.65A NXP-SOT403-1 Infineon-P-TSSOP-16-800")
 		(property "Reference" "U3"
-			(at 0 -3.45 0)
+			(at 0 -4.2 0)
 			(layer "F.SilkS")
 			(uuid "5f40afc7-f5e1-41e9-a62a-efff328cab15")
 			(effects
@@ -2452,7 +2450,7 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "R21"
-			(at 0 -1.17 0)
+			(at -3.0 -2.0 0)
 			(layer "F.SilkS")
 			(uuid "61b2f1fb-1b11-4464-8922-c1bcaf229aa7")
 			(effects
@@ -3238,7 +3236,6 @@
 					(size 0.26 0.26)
 					(thickness 0.04)
 				)
-				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -3332,6 +3329,7 @@
 		(path "/4b4e4c24-6efc-4c17-8632-05a041d5655a")
 		(sheetname "/")
 		(sheetfile "crimpdeq.kicad_sch")
+		(attr dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -3574,7 +3572,6 @@
 					(size 0.26 0.26)
 					(thickness 0.04)
 				)
-				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -3668,6 +3665,7 @@
 		(path "/432da093-eff8-43f2-a765-efc0c95b34f0")
 		(sheetname "/")
 		(sheetfile "crimpdeq.kicad_sch")
+		(attr dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -4141,7 +4139,6 @@
 					(size 1 1)
 					(thickness 0.15)
 				)
-				(justify mirror)
 			)
 		)
 		(pad "1" smd rect
@@ -4299,7 +4296,6 @@
 					(size 0.25 0.25)
 					(thickness 0.04)
 				)
-				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -4390,6 +4386,7 @@
 			)
 		)
 		(path "/74b4cff0-0f91-443b-83da-e5b17592770c")
+		(attr dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -4495,6 +4492,7 @@
 		(path "/216939ee-310f-4ccd-9e18-77040749e0d8")
 		(sheetname "/")
 		(sheetfile "crimpdeq.kicad_sch")
+		(attr dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -4737,7 +4735,6 @@
 					(size 0.26 0.26)
 					(thickness 0.04)
 				)
-				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -4966,7 +4963,6 @@
 					(size 0.26 0.26)
 					(thickness 0.04)
 				)
-				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -5356,7 +5352,6 @@
 					(size 0.26 0.26)
 					(thickness 0.04)
 				)
-				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -5571,7 +5566,6 @@
 					(size 0.4 0.4)
 					(thickness 0.06)
 				)
-				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -5662,6 +5656,7 @@
 			)
 		)
 		(path "/765abe03-f803-4660-b91e-cf7faff4a609")
+		(attr dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -5902,7 +5897,6 @@
 					(size 0.5 0.5)
 					(thickness 0.08)
 				)
-				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -5943,7 +5937,7 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "R22"
-			(at 0 -1.17 0)
+			(at 2.2 -0.85 0)
 			(layer "F.SilkS")
 			(uuid "18962f0a-c78c-4830-a9b4-d41cb96dc51d")
 			(effects
@@ -6167,6 +6161,7 @@
 		(path "/1ad78bbc-6576-48e7-a63b-fc6048e70b24")
 		(sheetname "/")
 		(sheetfile "crimpdeq.kicad_sch")
+		(attr dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -7411,6 +7406,7 @@
 		(path "/31fef13f-c995-4245-9615-a058c77e8ebd")
 		(sheetname "/")
 		(sheetfile "crimpdeq.kicad_sch")
+		(attr dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -8141,6 +8137,7 @@
 					(size 0.4 0.4)
 					(thickness 0.06)
 				)
+				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -8329,6 +8326,7 @@
 					(size 0.26 0.26)
 					(thickness 0.04)
 				)
+				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -8539,6 +8537,7 @@
 					(size 0.4 0.4)
 					(thickness 0.06)
 				)
+				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -8762,6 +8761,7 @@
 					(size 0.26 0.26)
 					(thickness 0.04)
 				)
+				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -8985,6 +8985,7 @@
 					(size 0.25 0.25)
 					(thickness 0.04)
 				)
+				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -10634,6 +10635,7 @@
 					(size 0.26 0.26)
 					(thickness 0.04)
 				)
+				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -10857,6 +10859,7 @@
 					(size 0.26 0.26)
 					(thickness 0.04)
 				)
+				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -12093,6 +12096,7 @@
 					(size 0.26 0.26)
 					(thickness 0.04)
 				)
+				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -12545,6 +12549,7 @@
 					(size 0.26 0.26)
 					(thickness 0.04)
 				)
+				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -12768,6 +12773,7 @@
 					(size 0.4 0.4)
 					(thickness 0.06)
 				)
+				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -12991,6 +12997,7 @@
 					(size 0.4 0.4)
 					(thickness 0.06)
 				)
+				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -13214,6 +13221,7 @@
 					(size 0.26 0.26)
 					(thickness 0.04)
 				)
+				(justify mirror)
 			)
 		)
 		(pad "1" smd roundrect
@@ -13310,7 +13318,7 @@
 		)
 	)
 	(gr_text "B-"
-		(at 153.5 73.5 0)
+		(at 153.5 74.8 0)
 		(layer "F.SilkS")
 		(uuid "3647c984-6f60-417d-b56f-8f5accc0d20b")
 		(effects
@@ -13354,7 +13362,7 @@
 		)
 	)
 	(gr_text "E-"
-		(at 128.8 79.7 0)
+		(at 128.8 79.35 0)
 		(layer "F.SilkS")
 		(uuid "902030a0-58fd-4605-8a12-85a78bce38a7")
 		(effects
@@ -13365,7 +13373,7 @@
 		)
 	)
 	(gr_text "E+"
-		(at 137.2 79.7 0)
+		(at 137.2 79.35 0)
 		(layer "F.SilkS")
 		(uuid "668c31ea-4043-4e5a-be56-8caa9717898e")
 		(effects
@@ -14896,14 +14904,7 @@
 		(net "+3V3")
 		(uuid "3dc17b1f-9778-4535-8855-83ea3eb8f50a")
 	)
-	(segment
-		(start 140.946 65.2556)
-		(end 140.544 65.6573)
-		(width 0.2)
-		(layer "F.Cu")
-		(net "+3V3")
-		(uuid "3f7701c2-4975-47e3-aa41-3f008cb1e097")
-	)
+
 	(segment
 		(start 132.525 57.2436)
 		(end 131.95 56.6686)
@@ -15152,14 +15153,7 @@
 		(net "+3V3")
 		(uuid "eb5a35c8-10d7-47b5-8c47-cfe3a655cba9")
 	)
-	(segment
-		(start 129.591 64.575)
-		(end 130.48 64.575)
-		(width 0.2)
-		(layer "F.Cu")
-		(net "+3V3")
-		(uuid "ee9dead6-f17b-488b-8495-af6d9505c9b3")
-	)
+
 	(segment
 		(start 131.073 58.2984)
 		(end 132.26 58.2984)
@@ -15290,14 +15284,7 @@
 		(net "+3V3")
 		(uuid "5dbec21d-a730-4dae-bea0-d594a624b65f")
 	)
-	(segment
-		(start 131.422 72.31)
-		(end 132.307 72.31)
-		(width 0.2)
-		(layer "B.Cu")
-		(net "+3V3")
-		(uuid "7e544884-5d66-446f-8038-60c5b6bd538c")
-	)
+
 	(segment
 		(start 149.3 55.8)
 		(end 149.5 56)
@@ -15925,14 +15912,7 @@
 		(net "VSYS")
 		(uuid "e6866a0b-d6c2-4ca0-928a-be319bf0aaf1")
 	)
-	(segment
-		(start 156.302 68.3298)
-		(end 155.57 68.3298)
-		(width 0.2)
-		(layer "B.Cu")
-		(net "VSYS")
-		(uuid "ec684f6d-f5d7-4d8b-aad8-9d79eef729d3")
-	)
+
 	(segment
 		(start 153.247 66.4591)
 		(end 152.8 66.906099)
@@ -18137,22 +18117,8 @@
 		(net "Net-(D4-DIN)")
 		(uuid "4d32014f-ea62-483c-a169-ba7f5e68cf9a")
 	)
-	(via
-		(at 144.398 64.1454)
-		(size 0.6)
-		(drill 0.3)
-		(layers "F.Cu" "B.Cu")
-		(net "Net-(D4-DIN)")
-		(uuid "cf4c3ea8-3e99-42f5-8ab7-f8ad5614cd59")
-	)
-	(via
-		(at 130.103 55.2355)
-		(size 0.6)
-		(drill 0.3)
-		(layers "F.Cu" "B.Cu")
-		(net "Net-(D4-DIN)")
-		(uuid "debddbe0-8026-43eb-a935-16e03d779ce7")
-	)
+
+
 	(segment
 		(start 146.843 63.8327)
 		(end 147.51 64.5)

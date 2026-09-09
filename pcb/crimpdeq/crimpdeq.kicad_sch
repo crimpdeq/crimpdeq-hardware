@@ -9313,7 +9313,30 @@
 		)
 		(uuid "fc529ec4-ffb5-44ef-818a-37657ea251c4")
 	)
-	(label "Buck_Coil"
+	(global_label "Net-(U3-AIN0)"
+		(shape bidirectional)
+		(at 55.88 146.05 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "68d4c95a-be3d-4318-be19-c966ef9c44fa")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 55.88 146.05 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "Buck_Coil"
+		(shape bidirectional)
 		(at 236.22 73.66 0)
 		(effects
 			(font
@@ -9322,6 +9345,17 @@
 			(justify left bottom)
 		)
 		(uuid "f19100d8-8c1e-4006-b9dd-b5d124d48120")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 236.22 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 	)
 	(global_label "SW_BATT"
 		(shape bidirectional)
@@ -10771,7 +10805,7 @@
 				(justify left)
 			)
 		)
-		(property "Datasheet" "https://www.diodes.com/assets/Datasheets/ds31785.pdf"
+		(property "Datasheet" "https://www.diodes.com/assets/Datasheets/DMG2301L.pdf"
 			(at 146.05 153.67 0)
 			(hide yes)
 			(show_name no)
@@ -10832,7 +10866,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "1ad78bbc-6576-48e7-a63b-fc6048e70b24")
 		(property "Reference" "J6"
 			(at 215.9 131.064 0)
@@ -11061,7 +11095,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "216939ee-310f-4ccd-9e18-77040749e0d8")
 		(property "Reference" "J10"
 			(at 241.3 114.554 0)
@@ -12288,7 +12322,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "31fef13f-c995-4245-9615-a058c77e8ebd")
 		(property "Reference" "J7"
 			(at 215.9 114.808 0)
@@ -12927,7 +12961,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "432da093-eff8-43f2-a765-efc0c95b34f0")
 		(property "Reference" "J5"
 			(at 215.646 107.696 0)
@@ -13405,7 +13439,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "4b4e4c24-6efc-4c17-8632-05a041d5655a")
 		(property "Reference" "J8"
 			(at 215.9 123.19 0)
@@ -13845,7 +13879,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:TSSOP-16_4.4x5mm_P0.65mm"
+		(property "Footprint" "TSSOP-16_4.4x5mm_P0.65mm"
 			(at 82.55 142.24 0)
 			(hide yes)
 			(show_name no)
@@ -14675,7 +14709,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "74b4cff0-0f91-443b-83da-e5b17592770c")
 		(property "Reference" "J11"
 			(at 241.3 121.666 0)
@@ -14827,7 +14861,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "765abe03-f803-4660-b91e-cf7faff4a609")
 		(property "Reference" "J12"
 			(at 241.3 129.794 0)
@@ -15339,7 +15373,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "8de54e04-d2b0-4ada-87eb-08059e46c463")
 		(property "Reference" "J9"
 			(at 241.3 108.204 0)
@@ -16275,7 +16309,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "C_0603_1608Metric"
 			(at 59.69 120.65 0)
 			(hide yes)
 			(show_name no)
@@ -16765,7 +16799,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "C_0603_1608Metric"
 			(at 72.39 120.65 0)
 			(hide yes)
 			(show_name no)
@@ -18802,7 +18836,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://datasheets.maximintegrated.com/en/ds/MAX17048-MAX17049.pdf"
+		(property "Datasheet" ""
 			(at 149.86 111.76 0)
 			(hide yes)
 			(show_name no)

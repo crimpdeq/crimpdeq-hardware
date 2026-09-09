@@ -1,23 +1,28 @@
 # Crimpdeq prototype readiness review
 
-**Last updated:** 2026-09-09, W3 USB geometry update on `fix/adc-bypass-cleanup`, commit `9de34eb`.
+**Last updated:** 2026-09-09, bounded remediation on `fix/adc-bypass-cleanup`, HEAD `4f3ed260a4c4dd86b32ec6d32ba566a6044ef294` (uncommitted working-tree changes).
+
+**Current round:** **NEEDS ATTENTION.** C1/C2/W2 remain resolved; W1 source DNP alignment and W5 metadata are fixed. W6 text warnings and the six authorized dangling objects are removed, but four further dangling items are exposed and retained outside this session's copper authority. Final checks: **0 DRC errors, 0 unconnected, 45 board warnings, 0 parity findings, ERC 0 errors; `verify.py` PASS.** W3/W4/W7/W8 and the residual W6 cleanup decision remain open; W1 assembly-release handling is still pending. See the new remediation round and decision queue; historical evidence below is retained, not current authorization.
 
 ## 1. Ver: NEEDS ATTENTION
 
 **The two CRITICAL blockers C1/C2 and the W2 digital/analog corridor violation are resolved.** This is a prototype assessment, not a production qualification or approval of the existing fabrication package.
 
-**Canonical saved-fill DRC, ERC, explicit schematic parity, and `verify.py` pass.** C11/C19 bypass placement and routing were improved, an unused IO5_SCK stub was removed, R7/R8 supplier metadata was corrected, and the affected C11/C19/C12/R7/R8 CPL positions match the saved board. No BOM or Gerbers were generated or changed.
+**Current isolated refill DRC and errors-only ERC pass; explicit all-severity schematic parity is now zero and `verify.py` passes.** The 45 remaining board warnings are itemized in the remediation round. All-severity ERC was not rerun; its earlier warnings remain historical coverage. C11/C19 bypass placement and routing were improved, an unused IO5_SCK stub was removed, R7/R8 supplier metadata was corrected, and the affected C11/C19/C12/R7/R8 CPL positions match the saved board. No BOM or Gerbers were generated or changed.
 
-**W2/W3 follow-up:** USB_D± now pass north of the AIN fanout on L3. CS goes around the north/west of U3, replacing its intermediate via without increasing its three-via count. The redundant USB_D+ inner-layer overlap was subsequently removed, and `verify.py` now rejects same-net collinear overlaps on the USB routes. Only the affected routing and cached fills changed in the PCB; all footprints, pad assignments, analog routing, outline and rules are unchanged. No assembly or manufacturing files changed. The corridor and USB-geometry checks pass. Saved-board DRC/parity retains 81 board warnings and 10 parity warnings, with zero errors or unconnected items; ERC and `verify.py` pass. L2 GND remains contiguous and covers 4,976 sampled AIN trace-envelope points. USB impedance/path matching and physical ADC noise testing remain pending.
+**Historical W2/W3 follow-up (counts below precede this remediation):** USB_D± now pass north of the AIN fanout on L3. CS goes around the north/west of U3, replacing its intermediate via without increasing its three-via count. The redundant USB_D+ inner-layer overlap was subsequently removed, and `verify.py` now rejects same-net collinear overlaps on the USB routes. Only the affected routing and cached fills changed in the PCB; all footprints, pad assignments, analog routing, outline and rules are unchanged. No assembly or manufacturing files changed. The corridor and USB-geometry checks pass. Saved-board DRC/parity retains 81 board warnings and 10 parity warnings, with zero errors or unconnected items; ERC and `verify.py` pass. L2 GND remains contiguous and covers 4,976 sampled AIN trace-envelope points. USB impedance/path matching and physical ADC noise testing remain pending.
 
-**Next action:** resolve or explicitly disposition W1, the remaining W3 USB matching/impedance work, and W4–W8, particularly cable-pad DNP handling and ADC filtering/damping. Then prepare and check one synchronized manufacturing package under separate authorization.
+**Next action:** Sergio/manufacturer must close the decision queue, including the four newly exposed W6 dangling items. Separately authorize and check a synchronized manufacturing package, with J5–J12 explicitly excluded from component placement. Current tool PASS is not ADC noise qualification, manufacturer acceptance, or certification of the existing Gerber/BOM/CPL package.
 
-### Reviewed identity and scope
+### Reviewed identity and scope — prior review-only round
+
+The bullets below preserve the earlier review identity. This remediation started with the report already modified and `.pi/` untracked; it changed only the two authorized design files and this report, without changing branch or HEAD. No commits, pushes, remote/PR changes, library refresh, rules/severity changes, vendor contact, ordering, or manufacturing regeneration occurred.
 
 - Original review date: 2026-09-08; current validation: 2026-09-09; KiCad CLI/Python 10.0.6.
 - Working tree: `/home/sergio/Documents/Crimpdeq/crimpdeq-pcb`.
 - Canonical project: `pcb/crimpdeq/crimpdeq.kicad_pro`.
-- Current branch: `fix/adc-bypass-cleanup`; prior bypass checkpoint: `87dc660`; W2 follows report commit `95f1986`; W3 geometry follows `9de34eb`.
+- Current branch: `fix/adc-bypass-cleanup`; reviewed HEAD: `4f3ed260a4c4dd86b32ec6d32ba566a6044ef294`. Initial `git status --short`: only `?? .pi/`; no tracked uncommitted changes. HEAD differs from `9de34eb` only in this report, not in design files. Prior bypass checkpoint: `87dc660`; W2 follows report commit `95f1986`; W3 geometry follows `9de34eb`.
+- This round modified only this report. Canonical PCB/schematic/project/rules hashes were checked unchanged after worker execution. No design edits, fabrication regeneration, commits, pushes, remote changes, ordering or vendor interaction were authorized or performed.
 - Trusted manufactured baseline: `v2.0.0`, commit `4976be254f64bac70d162865ef47e0bbe7e2f28b`.
 - The original review confirmed the canonical board over IPC. For W2, Konnect could not reach the PCB editor, so the editors were closed, the source was backed up outside the project, and KiCad API routing edits were tested/refilled on an isolated copy before revision-checked replacement. Konnect DRC/ERC were available; CLI supplied explicit refill/save and schematic-parity checks not exposed by those tools. This report assesses saved files, not arbitrary unsaved editor state.
 - The original `feat/ads1220` revision and v2.0.0 were exported into `/tmp/crimpdeq-review-refjLB/{current,baseline}` for the baseline comparison in §3. Later fixes were inspected separately against their pre-change sources.
@@ -25,7 +30,7 @@
 
 ## 2. Coverage
 
-The original Konnect refill/parity coverage gap is resolved by the authorized isolated CLI workflow. All eight requested check categories were exercised. Konnect's consolidated review reported complete coverage, with no unresolved symbols or audit failures; its heuristic findings were investigated rather than accepted as a final verdict.
+The original Konnect refill/parity coverage gap was resolved by the historical isolated CLI workflow. The table below preserves accumulated prior evidence; **its Konnect results were not rerun at HEAD**. The current round's actual coverage and NOT RUN items follow the table. Historical complete-coverage claims do not imply complete coverage in this session.
 
 | Check / tool | Result and interpretation |
 |---|---|
@@ -48,6 +53,57 @@ The original Konnect refill/parity coverage gap is resolved by the authorized is
 | Current validation | Saved canonical board and isolated refill copy: zero errors/unconnected items; ERC zero errors; canonical `verify.py` PASS. Explicit all-severity parity: 81 board warnings + 10 parity warnings, zero errors |
 | Change-scope verification | Earlier blocker fix changed C12/R7/R8 CPL rows and cached fills. The bypass follow-up moved/rerouted C11/C19, added one GND via, removed the IO5_SCK stub and an obsolete +3V3 via, synchronized two supplier fields, moved C11 text, and changed only C11/C19 in the CPL. Pad endpoint connectivity and AIN routing are unchanged |
 
+### 2026-09-09 bounded remediation round — latest evidence
+
+This round accepts the supplied revalidation baseline rather than repeating the historical baseline comparison. Fresh-context native background workers performed research, geometry measurement, sequential schematic/PCB edits and visual review. The parent reviewed each design diff before the next edit phase and independently reran the documented isolated check block.
+
+| Check | Supplied baseline → final result |
+|---|---|
+| All-severity DRC on an isolated refilled/saved copy | Errors **0 → 0**; unconnected **0 → 0**; board warnings **81 → 45** |
+| Explicit schematic parity | Original W5 findings **10 → 0**; final total **0**. F1 temporarily introduced eight DNP mismatches until F2 aligned board attributes |
+| Errors-only ERC | **0 → 0**; all-severity ERC **NOT RERUN** |
+| Canonical `verify.py` | **PASS → PASS**: 55 components, 172 connected named pads, 13 GND vias; AIN0/AIN1 each 7.338 mm, F.Cu, zero vias; corridor/USB-overlap guards pass |
+| F1 electrical/identity invariants | Before/after XML netlists: all **57 net endpoint sets identical**; every pre-existing UUID retained, one label UUID added |
+| F2 copper/geometry invariants | Exactly four segments and two vias removed; no copper added. Remaining 539 segments, 68 vias, 213 pads and all six zone objects, including keepout/fill content, byte-identical |
+| F2 text/DNP changes | 24 fabrication-reference mirror flags corrected, six front-silk text positions moved (U3, R21, R22, B−, E−, E+); no text deleted/reworded/resized; J5–J12 board DNP set |
+| Regression/scope guard | Parent tracked-file hashes confirmed only the two design files changed before this report update. BOM/CPL/Gerbers, project/rules, libraries and all other tracked files unchanged; existing report edits preserved |
+
+**Remaining board warnings:** 39 `lib_footprint_mismatch`, two `lib_footprint_issues`, three `track_dangling`, one `via_dangling`. All 24 mirror warnings, five silk overlaps and five silk-on-copper warnings are gone. Removing only the six expressly authorized objects exposed four parent-branch objects; their removal is not authorized by a request to remove exactly the original six. They remain unsuppressed and are listed in §7.
+
+**W5 implementation detail:** schematic global net labels now match board `Buck_Coil` and `Net-(U3-AIN0)` without endpoint changes. C11/C19/U3 schematic footprint IDs match the existing unqualified embedded board IDs; no library was refreshed. Q2's datasheet field matches the board's `DMG2301L.pdf` URL; U5's schematic datasheet field matches the currently empty board field. This is parity synchronization, not improved library resolution or new part qualification. All eight J5–J12 schematic DNP flags and board `attr dnp` flags are now set; the existing CPL still contains their eight rows and has not been regenerated.
+
+**Tool/safety record:** the first F1 attempt stopped without writes while KiCad/locks were present. Sergio saved and closed KiCad; process/lock and unchanged-hash checks preceded the retry. Builtin worker tool allowlists did not expose Konnect, so the explained fallback used backed-up, hash-checked, format-aware replacements, not broad KiCad serialization. Canonical zones were not refilled or rewritten; only isolated copies received `--refill-zones --save-board`. An early F2 scratch test used `board.kicad_pcb` without matching project/rule files and incorrectly reported four J2 hole errors; that result was rejected. The corrected same-stem isolated block and the independent parent run both give zero errors. No rules or severities were changed to obtain that result. The retry workflow subsequently ended with `Request was aborted` after F2's parent-approved edit/validation checkpoint, before launching visual review. The parent confirmed both design files still matched the reviewed candidate, captured the partial diff, and retried only the read-only visual stage as a fresh native background child; no external/foreground execution fallback was used.
+
+Parent final evidence: `/tmp/crimpdeq-parent-final-3Bk2mG/{drc.json,erc.json,verify.log}`. F1 netlists: `/tmp/f1-{before,after}.xml`. F2 backup/evidence: `/tmp/crimpdeq-f2-backup-29lkhN/`, `/tmp/crimpdeq-remediation-f2-FcwgmK/`. Original report/diff/hash snapshot: `/tmp/crimpdeq-orchestrator-vk6KeL/`. These are disposable inspection artifacts, not release outputs.
+
+**Visual review completed:** the fresh background worker generated and actually inspected isolated CLI plots of front/bottom silk with mask/pad context, all six moved-text regions, fabrication-reference montages and before/after copper-deletion regions. Moved silk and bottom-facing labels are upright/readable and visibly off same-side pads; 24/24 fabrication-reference mirror states are correct. All six requested copper objects are absent visually and by UUID; the four out-of-scope dangling items remain. J5–J12 pads, net mapping and DNP attributes were confirmed. The worker cited `ain-In2-Cu.png` in its L2 discussion; the parent separately inspected the correct **L2/In1.Cu** crop, `ain-In1-Cu.png`, showing a continuous plane with normal antipads. Byte-identical surviving copper/zones and `verify.py`, rather than the image alone, support the unchanged-corridor claim.
+
+Inspected disposable visual artifacts were `/tmp/crimpdeq-visual-retry-657379/after/svg/{after-silk-mask-square,after-bottom-facing-silk-mask-square}.png`, `after/crops/` (moved-text, fabrication-reference and AIN layer crops), and `{before,after}/copper-crops/*-removed-objects-montage.png`. Generated PNG/SVG previews were deleted after inspection; validation logs and source backups were retained under `/tmp`. **GUI reopen was NOT RUN**; saved designs loaded through KiCad CLI/Python and isolated plots, not a reopened live editor. Very small unchanged fabrication text has no fabrication-scale readability guarantee. Hardware/impedance/noise/RF/physical checks remain unperformed.
+
+### 2026-09-09 HEAD revalidation round — historical, before remediation
+
+Four independent fresh-context background workers checked CLI results, baseline connectivity, available review/render operations, and metadata. The orchestrator reconciled conflicting claims against current JSON, source files and Git ancestry.
+
+| Check at `4f3ed260` | Current result | Delta versus `9de34eb` round |
+|---|---|---|
+| KiCad CLI | 10.0.6 | Same version |
+| Isolated refill/save DRC, all severities + parity | 0 errors; 0 unconnected; 81 board warnings; 10 parity warnings | 0 / 0 / 0 / 0 |
+| Separate saved-state copy, before refill | Same 0 / 0 / 81 / 10 | C2 still resolved; not masked by refill |
+| ERC, requested errors-only scope | 0 errors | 0 |
+| `verify.py`, canonical saved board | PASS; 55 components, 172 connected named pads, 13 GND stitching vias | PASS unchanged |
+| Current schematic ↔ PCB multi-pad endpoint sets | 32/32 match exactly | No endpoint drift |
+| Trusted baseline XML export and requested pin-map comparison | U1, all 16 U3 pins, R7/R8/C12, J5–J12 and U5 agree with §3 | No drift from documented changes |
+| Adjacent firmware pin-map inspection | Matches; firmware HEAD `3f664b6783c3b0cc61338b17435c94a48ff22913`, untracked `photos/` | Pin map only; no build/test |
+| CLI copper/silkscreen plots, actually inspected by render worker | F.Cu/In1.Cu/In2.Cu/B.Cu and both silk layers inspected; AIN corridor free of digital tracks, L2 visually continuous beneath AIN, USB north of fanout, antenna notch visible | Supports W2/W3 geometry history; not impedance/noise/RF qualification |
+
+**Additional ERC scope:** the render worker's all-severity ERC reports **27 warnings**: 21 `lib_symbol_mismatch`, four `lib_symbol_issues`, two `footprint_link_issues`; zero errors. The errors-only output has no violations. Thus “zero ERC warnings” is not established by the requested errors-only check. No all-severity ERC baseline was recorded for a numeric delta; these are newly recorded coverage, not a demonstrated regression.
+
+**NOT RUN:** Konnect discovery/config loading, project/IPC confirmation, consolidated `run_design_review`, PCBWay `validate_for_manufacturing`, `audit_manufacturing`, Konnect netlist export and Konnect rendering: ambient Konnect tools were unavailable to the background worker. CLI temp-copy checks, XML export and layer plots substituted where equivalent operations exist; no equivalent consolidated/manufacturing verdict was obtained. Historical NOT READY/READY heuristics below remain prior evidence, not refreshed tool results. No claim is made about current live editor state.
+
+**NOT RUN:** hardware noise/startup/USB/LED/RF/fit tests (no physical test setup exercised); firmware build/test (pin-map inspection only); electrical path tuning/impedance qualification; PCBWay stackup/process acceptance; BOM/CPL/Gerber regeneration or package certification (outside review scope). Existing Gerber ZIP remains unverified.
+
+Temporary evidence: `/tmp/crimpdeq-review-sjUKwQ/` (DRC/ERC/verify and pre-refill copy), `/tmp/crimpdeq-review-DObl8V/{current,baseline}/netlist.xml` (baseline exports), `/tmp/crimpdeq-review-850ePi/` (fallback JSON, netlist and inspected PNG/SVG plots). These are disposable inspection artifacts, not fabrication deliverables. A direct parent pcbnew track-iterator query failed because Python 3.14 SWIG lacks `next`; actual via sizes were instead checked from PCB text, and cable drills through read-only pad APIs. No canonical file was saved.
+
 ### Reproducible isolated checks
 
 From the repository root, with `T` as a fresh temporary directory:
@@ -65,11 +121,13 @@ kicad-cli sch erc --severity-error --format json \
 /usr/bin/python3 tools/crimpdeq/verify.py "$DESIGN/crimpdeq.kicad_pcb"
 ```
 
-The current MCP gateway did not rediscover the previously loaded Konnect DRC/ERC operations, so the 2026-09-09 refresh used this documented CLI fallback. The original review's netlists were first obtained through Konnect; XML netlists were subsequently exported with `kicad-cli sch export netlist --format kicadxml` because Konnect did not expose that comparison format. Netlists and plots were inspection artifacts under `/tmp`, not manufacturing deliverables.
+In the prior 2026-09-09 refresh, the MCP gateway did not rediscover the previously loaded Konnect DRC/ERC operations, so that refresh used this documented CLI fallback. In the current round, ambient Konnect tools were unavailable to the background worker; the CLI fallback was used again. The original review's netlists were first obtained through Konnect; XML netlists were subsequently exported with `kicad-cli sch export netlist --format kicadxml` because Konnect did not expose that comparison format. Netlists and plots were inspection artifacts under `/tmp`, not manufacturing deliverables.
 
 **Important limitations:** error-only parity hides warning-severity net conflicts. Existing project settings also ignore `missing_courtyard`, `track_not_centered_on_via`, `tuning_profile_track_geometries`, `footprint_filters_mismatch`, and `footprint_type_mismatch`; this review changed no severities or exclusions. In particular, a DRC pass does not validate USB tuning geometry. `verify.py` now rejects IO/USB/reset/LED-data tracks and vias on every layer within the projected AIN and cable-signal copper envelopes plus 0.20 mm. It does not itself prove antenna clearance or ground-plane coverage; supplementary geometry/plot checks address those topics. These checks are not electromagnetic simulation or PCBWay process approval.
 
 ### Automated audit adjudication
+
+The following Konnect findings and adjudications are retained from prior rounds. The unavailable consolidated/manufacturing tools mean their complete finding set was **not independently refreshed** this round. Current CLI library warnings do not alone prove that every footprint mismatch is harmless; retained baseline geometry evidence supports the scoped interpretation, not a blanket waiver.
 
 - **J2 decoupling, two reported errors:** both concern the connector's raw USB supply pins on `Net-(D8-A)`. C5 is 4.7 µF on VBUS downstream of D8, not directly on the connector net. This topology and all surviving supply-path pin assignments match trusted v2.0.0. A generic connector decoupling heuristic is not evidence of a new fatal defect; no blanket extra 100 nF/10 µF addition is prescribed. Confirm USB inrush and protection behavior on hardware.
 - **+BATT/VBUS bulk-cap warnings:** C6/C5 are each 4.7 µF, matching v2.0.0 and the MCP73831 typical application. The tool's blanket ≥10 µF threshold is not a mandatory charger requirement.
@@ -166,6 +224,40 @@ A symmetrical bridge excited at 3.3 V nominally places its common mode near 1.65
 
 ## 4. Findings
 
+### Latest disposition — working-tree remediation at `4f3ed260`
+
+| Finding | Latest status and evidence |
+|---|---|
+| C1 | **STILL RESOLVED.** Corrected CPL evidence retained; BOM/CPL byte-identical to session start. No assembly package certification implied. |
+| C2 | **STILL RESOLVED.** Saved canonical fill content unchanged; final isolated refill check has zero errors/unconnected. |
+| W1 | **SOURCE METADATA FIXED; RELEASE HANDLING OPEN.** J5–J12 DNP=true in schematic and PCB, matching BOM Do Not Place intent. Existing CPL still lists all eight; its correction/assembler handling awaits a separately authorized release step. |
+| W2 | **STILL RESOLVED.** Parent `verify.py` corridor and USB-overlap guards PASS; surviving copper and zones unchanged. |
+| W3 | **OPEN; MEASURED, NOT TUNED.** U1→J2 A-side D−/D+ planar difference 3.6374 mm; B-side 0.3134 mm. Branch-separated paths and limitations in §7; no USB copper changed. PCBWay stackup/90 Ω assessment and tuning decision pending. |
+| W4 | **OPEN; PROPOSAL ONLY.** Both 100 nF bypass capacitors share a 0.8786 mm routed return segment; current-loop impedance remains unqualified. Four 47 Ω SPI resistors and specified C12 C0G dielectric are proposed in §7, not applied. |
+| W5 | **FIXED.** Original ten parity findings resolved; final all-severity parity zero. All 57 schematic net endpoint sets and existing UUIDs preserved. Library/procurement quality is not inferred from metadata parity. |
+| W6 | **PARTIALLY FIXED.** Text warning categories zero; exact six authorized dangling objects removed. 45 warnings remain: 39 library mismatches + 2 aliases + 4 newly exposed dangling objects retained outside removal scope. Written dispositions below and §7. |
+| W7 | **OPEN; PUBLISHED CAPABILITY CONFLICT.** PCBWay's published 0.15 mm annular-ring minimum exceeds the board's 0.10 mm minimum; order-specific acceptance/redesign decision required. Published drills/spacing/slots do not constitute acceptance. |
+| W8 | **OPEN; ACTUAL V6 EVIDENCE FOUND.** Supplier-linked WS2812B-V6 datasheet explicitly says 3.3 V is supported, but guaranteed operating-range and VIH characterization at 3.3 V were not found. Keep/substitute qualification decision remains with Sergio. |
+
+**Library disposition (W6):** retain all 39 embedded-footprint mismatch warnings and the two aliases (Rust_Board/J2 and PCM_Espressif/U1), without refresh, suppression or waiver. Embedded pads remain intact; prior geometry evidence is retained but is not a blanket determination that every library difference is harmless. A later explicit library audit must compare each embedded footprint against the intended manufacturer package before any selective refresh. The unavailable aliases do not mean the present board lacks physical pads. These unresolved library checks remain part of release review.
+
+### Prior disposition at `4f3ed260` — historical evidence retained below
+
+| Finding | Revalidated status and evidence |
+|---|---|
+| C1 | **STILL RESOLVED.** C12/R7/R8 CPL coordinates, sides and rotations match the board; C11/C19 rows also agree. This is a narrow placement check, not package certification. |
+| C2 | **STILL RESOLVED.** Separate pre-refill saved-copy DRC has zero errors/unconnected, identical to the isolated refill result. |
+| W1 | **STILL OPEN.** J5–J12 board attributes remain 0/not DNP; all eight BOM entries say Do Not Place and all eight remain in CPL. |
+| W2 | **STILL RESOLVED.** Canonical `verify.py` corridor checks pass; inspected CLI layer plots agree with north-routed USB and clear AIN corridor/L2 coverage. The historical 4,976-point ground sampling was not rerun; visual continuity is not full return-path qualification. |
+| W3 | **STILL OPEN; geometry fix retained.** USB overlap/corridor checks pass; coupled endpoint-path matching and stackup impedance remain unvalidated. No copper changed since the prior round. |
+| W4 | **STILL OPEN.** C11/C19/C12 remain 100 nF; no established C12 dielectric or SPI 47 Ω damping. TI's series-resistor, differential-cap quality and monotonic-ramp guidance still applies. Bypass improvement is retained; startup/current-loop/noise performance is untested. |
+| W5 | **STILL OPEN.** Current DRC JSON confirms all ten identities: net conflicts L1.1/U6.3 and C12.1/R7.1/U3.11; footprint IDs C11/C19/U3; datasheet fields Q2/U5. Current endpoint sets independently match 32/32. |
+| W6 | **STILL OPEN.** Current 81-warning count: 12 mirrored + 12 nonmirrored text, five silk overlaps, five silk/copper overlaps, 39 footprint-library mismatches, two unavailable aliases, four dangling tracks, two dangling vias. Silk defects are visible in current plots. No cleanup performed. |
+| W7 | **STILL OPEN.** Direct source inspection confirms actual vias 0.50/0.30 and 0.60/0.30 mm, all eight cable drills 0.70 mm, Default clearance 0.20 mm and global minimum field 0.00 mm. Minimum nominal via ring remains 0.10 mm; no manufacturer acceptance obtained. |
+| W8 | **STILL OPEN; variant evidence clarified.** BOM says WS2812B, 5050 footprint, supplier `C52917433`; `_gen_bom.py` comments identify WS2812B-V6/SMD5050-4P, not WS2812B-2020. The local generic datasheet labels VDD +3.5–+5.3 V under absolute maxima and characterizes at 4.5–5.5 V; neither establishes guaranteed 3.3 V operation of the selected V6 part. Supplier-code/comment identity is not voltage qualification. |
+
+**Exact readiness gates:** reconcile W1 DNP/source/assembly handling; resolve or explicitly disposition W3 path matching/impedance and W4 analog/startup risk; disposition W5 metadata and W6 silk/dangling/library warnings without blanket suppression; reconcile W7 actual process constraints and W8 guaranteed LED variant/margin. Separately authorize preparation and checking of a synchronized fabrication/assembly package. Until then **NEEDS ATTENTION**; tool PASS is neither analog noise qualification nor PCBWay acceptance nor certification of the existing files.
+
 ### CRITICAL — C1/C2 resolved
 
 **C1. Obsolete C12/R7/R8 CPL entries — FIXED.**
@@ -186,7 +278,9 @@ Before the fix, saved canonical copper still produced **54 DRC errors**: 43 clea
 
 For the C2 refill operation specifically, a format-aware before/after comparison confirmed that only cached filled polygons changed in the PCB, aside from serialization ordering. Later authorized bypass-layout cleanup changed the focused items listed in the coverage table; it did not change pad endpoints or the AIN routes. The existing Gerber ZIP remains unchanged and **is not certified as representing the current board**; preparing and checking a synchronized fabrication package remains a separate release action.
 
-### WARNING — resolve or explicitly disposition before ordering
+### WARNING — historical findings before bounded remediation
+
+These detailed descriptions preserve the prior state. The latest status table and §7 supersede their open/fixed wording where this round changed the evidence.
 
 **W1. J5–J12 DNP intent still disagrees across sources; R7/R8 metadata is fixed.** R7/R8 schematic and PCB LCSC fields now use `C25076` for 100 Ω, matching their Value, AssemblyNote and existing BOM. J5–J12 still have PCB DNP=false and attributes=0 and remain in the CPL, while the existing BOM explicitly says Do Not Place. **Fix:** make source metadata and eventual assembly files agree; PCBWay must treat those eight entries as bare cable pads, not buy/place connectors. Do not regenerate BOM blindly from current fields.
 
@@ -204,13 +298,27 @@ For the C2 refill operation specifically, a format-aware before/after comparison
 
 **W8. Inherited D4 voltage margin is not guaranteed by its generic datasheet.** D4 remains on +3V3 with the same pin polarity as v2.0.0; the local WS2812B document does not establish 3.3 V operation. **Fix:** retain the actually validated LED variant or obtain a supplier datasheet guaranteeing the intended voltage, then test brightness/data behavior across supply and temperature. Baseline success reduces prototype risk but does not qualify arbitrary WS2812B substitutions.
 
-### SUGGESTIONS
+### SUGGESTIONS — historical review
 
 - Put exact orderable package/variant requirements for U3, U5, D4 and the USB-C alternate into the eventual procurement approval. Do not infer interchangeability from generic names or supplier codes.
 - Remove misleading mirrored reference artwork and obsolete `hx711` naming only in an authorized cleanup session; they do not by themselves change connectivity.
 - Validate I2C rise time at the selected clock rate with the new 10 kΩ pull-ups, and scope ADC supply startup. Match the firmware reference/gain/rate settings to the actual bridge.
 
 ## 5. Prototype manufacturing notes
+
+The artifact provenance and physical-design notes below are retained from the prior review. For current DNP flags, web research and manufacturer questions, use the latest disposition above and §7; historical statements that no fresh web research occurred no longer describe this remediation. No existing manufacturing output was changed or certified.
+
+### Existing artifact provenance — current round
+
+All three existing deliverables predate the last board-changing commit `9de34ebd815f8ec416ca3a7e743051afaf6b82ae`. Direct `git merge-base --is-ancestor` checks confirm each commit is an ancestor of both that board commit and reviewed HEAD; a worker's “divergent/not ancestor” claim was rejected.
+
+| Existing artifact | Last Git-modified commit | Current treatment |
+|---|---|---|
+| `assembly/crimpdeq_bom.csv` | `a38028fbe77354ca930afe389d3d99cf16f99bfe` | Older than board; W1 and variant/package checks remain |
+| `assembly/crimpdeq_cpl.csv` | `8c437a20cc4d5289e4baedc3211f046afe8683d6` | Older than board; narrow corrected rows match, full release not certified |
+| `gerbers/crimpdeq.zip` | `97fa941a1fcd6b17cb636897969170cffcffdb7f` | Older than board; unverified until an authorized regeneration/comparison check |
+
+`assembly/` also contains `_gen_bom.py`, `_gen_cpl.py`, `README.md` and a local `__pycache__/` directory. No outputs were regenerated. Age alone does not prove a BOM/CPL mismatch, but does not establish synchronized release provenance either.
 
 ### Geometry and constraints verified
 
@@ -245,4 +353,62 @@ With C1/C2 fixed, this still remains a prototype:
 4. **Antenna:** link range and RF performance with the final battery, enclosure and user grip; a keepout check is not an RF qualification.
 5. **Mechanical/assembly:** USB fit/retention, plated-slot soldering, cable insertion/strain relief, bottom-side clearances and visual/X-ray inspection as appropriate for U1/U5 hidden joints.
 
-C1/C2 and W2 are closed. A small prototype run is reasonable after the remaining warning dispositions and final synchronized manufacturing-package checks are complete. **NEEDS ATTENTION: this is not yet approval to submit the existing ZIP/BOM/CPL package.**
+C1/C2, W2 and now W5 are closed; W1 source metadata is aligned. A small prototype run remains conditional on closing the decision queue and separately completing synchronized manufacturing-package checks. **NEEDS ATTENTION: this is not approval to submit the existing ZIP/BOM/CPL package.**
+
+## 7. Decision queue — prepared, not applied or sent
+
+### W3 — Sergio tuning decision + PCBWay stackup/impedance response
+
+R2 measured unique routed centerline paths from U1 pad centers to each tied USB-C data pad. Lengths below are planar millimetres; via barrel lengths are excluded because an accepted stackup was not available. J2 A6/B6 are tied D+ endpoints and A7/B7 are tied D− endpoints, so there is not one orientation-independent endpoint difference.
+
+| Net / endpoint | B.Cu | In2.Cu | F.Cu | Total |
+|---|---:|---:|---:|---:|
+| D+ U1.27 → J2.A6 | 1.2108 | 32.6514 | 1.3020 | 35.1643 |
+| D+ U1.27 → J2.B6 | 1.2108 | 32.6514 | 1.8720 | 35.7343 |
+| D− U1.26 → J2.A7 | 2.0406 | 30.6233 | 6.1378 | 38.8017 |
+| D− U1.26 → J2.B7 | 2.0406 | 30.6233 | 3.3838 | 36.0477 |
+
+D− minus D+: **A-side 3.6374 mm; B-side 0.3134 mm** (totals rounded independently). Through-route layer transitions: D+ B.Cu→In2.Cu at (136.8020,61.0260), In2.Cu→F.Cu at (146.9650,77.0322); D− at (134.2450,62.3310) and (147.6500,77.8500), respectively. Additional via taps lead to TVS branches: D+ (146.1940,72.6247)→D10.1 (146.3000,73.5000), **0.9189 mm F.Cu**; D− (141.9120,73.4517)→D7.1 (143.3000,73.5000), **1.4079 mm F.Cu**. Aggregate copper totals 37.7452/40.2096 mm include branches and must not be presented as paired endpoint paths. These measurements do not prove coupling, skew tolerance or impedance.
+
+**Question to PCBWay (not sent):** “For this four-layer Crimpdeq board with USB_D± routed on F.Cu, In2.Cu and B.Cu using 0.20 mm traces, please supply the exact proposed production stackup: total thickness/tolerance, each core/prepreg thickness and material Dk/Df, finished copper thickness per layer, reference planes and soldermask assumptions. Please assess the actual pair spacing, transitions and TVS/USB-C branches against 90 Ω differential impedance on each routed layer; state your impedance tolerance, required width/spacing adjustments and coupon/test method. Do not assume a nominal stackup or modify routing without approval.”
+
+**Sergio decision:** after that response, choose an explicit full-speed USB impedance/skew acceptance target and whether to authorize coupled-route tuning, preserving ESD branches and the W2 analog corridor. No tuning applied.
+
+### W4 — Sergio approval of component substitutions/additions and qualification plan
+
+Measured supply geometry: C11.1→U3.12 **2.9752 mm straight / 3.4699 mm routed F.Cu**; C19.1→U3.13 **2.5287 / 2.7007 mm**. C11.2→GND via (142.3500,68.8500) **0.8143 mm straight / 0.8786 mm routed**. C19.2 uses the same via: **1.7855 mm straight / 2.5857 mm routed via C11.2**. C19.2→C11.2 is 1.7071 mm; the shared C11.2→(142.1000,69.1000)→via segment is 0.8786 mm. U3 ground pads connect through filled planes rather than an explicit trace-only return to that via, so a complete loop impedance/length is not established by this measurement.
+
+**Proposal, NOT APPLIED:** add four **47 Ω series resistors**, one each on SCK/U3.1, MOSI/U3.16, MISO/U3.15 and CS/U3.2, near U3; verify SPI timing with actual bus capacitance and edge rates. Leave unused DRDY/U3.14 NC. Specify **C12 = 100 nF, C0G/NP0, ±5%, ≥16 V**, retaining the existing 0603 footprint only if an exact qualified orderable part can meet it. Package availability is unverified; any larger footprint or capacitance change needs explicit approval, not a silent substitution. C11/C19 remain 100 nF bypass capacitors. No schematic, PCB or BOM component change was made for this proposal.
+
+Source: TI ADS1220 datasheet §§9.1, 9.3 and 9.4 (`pcb/datasheets/ads1220.md`; https://www.ti.com/lit/ds/symlink/ads1220.pdf): 47 Ω used-digital-line guidance, high-quality differential capacitor with C0G preferred, monotonic supply ramp slower than 1 V/50 µs and approximately 50 µs wait after supplies stabilize. **Sergio approval required:** component/footprint procurement plan and separately authorized implementation. Startup scope captures and ADC noise tests at intended gain/rate, with USB/radio/LED activity, remain physical tests; geometry and DRC are insufficient.
+
+### W7 — PCBWay process acceptance or Sergio-authorized redesign
+
+Published research, retrieved 2026-09-09: https://www.pcbway.com/capabilities.html covers 1–14 layers and states **0.15 mm minimum annular ring**, **0.10 mm minimum spacing**, CNC/finished holes **0.15–6.0 mm**, and **PTH ±0.08 mm** tolerance; sub-0.20 mm holes incur extra charges. These are general capabilities, not a four-layer order acceptance. https://www.pcbway.com/pcb_prototype/Plated_through_slots.html explicitly supports plated slots with **0.50 mm minimum width** (NPTH slots 0.80 mm).
+
+**Exact question to PCBWay (not sent):** “Please confirm acceptance for the quoted four-layer stackup of 0.50/0.30 mm and 0.60/0.30 mm copper/drill vias, including the **0.10 mm minimum nominal annular ring**. Your published minimum is 0.15 mm: is an explicitly approved process available, or must we redesign? Please clarify whether the 0.30 mm Excellon tool callouts are interpreted as finished plated holes and how drill compensation, registration and annular-ring tolerances are applied. Also confirm **1.50 mm copper / 0.70 mm plated cable holes**, **0.20 mm default copper clearance**, and J2 plated shell slots: S1/S4 **0.65×1.70 mm in 1.05×2.10 mm pads**, S2/S3 **0.65×1.40 mm in 1.00×2.00 mm pads**, plus two separate **0.65 mm NPTH locating holes**. Quote plated-slot fabrication and shell-tab soldering; do not convert shell slots to NPTH. State finished-hole/slot tolerances and any required geometry changes before we authorize release.”
+
+The global minimum-clearance field remains 0.00 mm; no rules were changed. Published drill/spacing/slot capability does not override the annular-ring conflict or certify this geometry. **Sergio decision:** obtain explicit acceptance or authorize redesign; neither occurred.
+
+### W8 — Sergio keep-or-substitute decision for D4
+
+Actual supplier listing: https://www.lcsc.com/product-detail/LED-Indication-Discrete_Worldsemi-WS2812B-V6_C52917433.html identifies **Worldsemi WS2812B-V6, C52917433, SMD5050-4P**. Its linked eight-page datasheet was retrieved on 2026-09-09: https://datasheet.lcsc.com/datasheet/pdf/0689d8fd6dabfc7959e82552d4ffad8b.pdf?productCode=C52917433 .
+
+The V6 feature text states **“3.3 V power supply is supported.”** This corrects the earlier absence-of-variant-evidence claim. However, its **Absolute Maximum Ratings** table gives VDD **+3.3–+5.3 V** at TA=25°C; that heading is not a guaranteed recommended operating range. Its Electrical Characteristics table is conditioned at **TA=25°C, VDD=5 V, VSS=0 V**, with VIH minimum **0.55×VDD** and maximum **VDD+0.7 V**. A guaranteed operating range and VIH test/specification at **VDD=3.3 V were NOT FOUND**; extrapolating the VIH coefficient to 3.3 V is not qualification.
+
+**Research verdict:** positive manufacturer evidence of 3.3 V support exists for the actual V6, but full supply/temperature/data-margin guarantees remain incomplete. **Sergio decision:** keep only this exact variant with explicit prototype-risk acceptance plus supplier/manufacturer clarification and hardware tests over actual 3V3 tolerance/temperature, or authorize a substitute whose datasheet guarantees that envelope and verify package/polarity/protocol compatibility. No variant, supply or routing change applied; no supplier contacted.
+
+### W6 — additional bounded cleanup authorization needed
+
+The exact authorized six deletions were completed. DRC now identifies these **four remaining parent-branch items**, which were not separately reported until their terminal objects were removed:
+
+| Object / UUID | Net/layer | Geometry (mm) |
+|---|---|---|
+| Track `7fadb04f-5e14-45a1-b68c-e0d4993ac03f` | +3V3 / F.Cu | (143.2600,65.2556)→(140.9460,65.2556), 2.3140 mm |
+| Via `ea989365-0abb-45d4-84a5-039c80940880` | +3V3 / F.Cu–B.Cu | (132.3070,72.3100) |
+| Track `66885830-2dfd-4215-bd50-e0bb37166b1c` | VSYS / B.Cu | (156.6000,68.0310)→(156.3020,68.3298), 0.4220 mm |
+| Track `d76388cd-6241-4c6f-af23-d25cc3d40694` | D4 DIN / B.Cu | (144.3980,64.1454)→(144.7110,63.8327), 0.4424 mm |
+
+**Sergio decision:** authorize a separately bounded inspection/removal of these remaining branches, with connectivity proof, or explicitly disposition them. They were not removed or suppressed here. The 39 footprint mismatches and two aliases retain the written no-refresh disposition in §4 and require deliberate release review, not blind library updates.
+
+**Release boundary:** no questions above have been sent. BOM/CPL/Gerber regeneration and review remain a separate authorized release step, including removing/explicitly excluding all eight bare cable-pad placements. Until the decision queue closes, the verdict stays **NEEDS ATTENTION**. Tool PASS is not analog noise qualification, manufacturer acceptance, certification of existing deliverables, or permission to order.

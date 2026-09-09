@@ -1,5 +1,21 @@
 # Crimpdeq prototype readiness review
 
+## ADC bypass follow-up — 2026-09-09
+
+This follow-up supersedes the affected placement/metadata counts below; the original review remains historical evidence, not a certification of the current fabrication ZIP.
+
+- Retained the reviewed local C11/C19 bypass improvements and approximately 2.04 mm SCLK stub removal. Supply-pad-to-U3 distances are now 2.98 mm (C11/AVDD) and 2.53 mm (C19/DVDD); a dedicated GND via was added. These are layout improvements, not measured noise results.
+- Synchronized R7/R8 schematic and PCB LCSC fields to `C25076` (100 Ω), matching the existing BOM. W1's resistor-code conflict is closed; the cable-pad DNP issue remains open.
+- Moved C11's reference below the capacitor, clear of C19's silkscreen and solder-mask openings. Removed the newly dangling +3V3 via at (139.054, 71.6819) mm.
+- Corrected only C11/C19 in the existing CPL: C11=(140.8000, −69.1000), C19=(140.3000, −67.6000), both 0°/top. Other 53 rows are unchanged. No BOM or Gerbers were generated or changed.
+- Saved-board Konnect DRC: **zero errors, zero unconnected items, 81 board warnings**. All-severity refill/parity check: **10 existing parity warnings**, no errors. ERC and `verify.py` pass: 55 components, 172 connected named pads, 13 GND vias; AIN0/AIN1 remain 7.338 mm each, F.Cu, zero vias.
+- Cleanup scope was checked against the pre-cleanup backup: exactly two PCB supplier fields, one reference position and one removed via, plus cached zone fills/serialization ordering. The preceding bypass work is preserved. A focused front-silkscreen/mask render confirms the C11/C19 labeling is clear.
+- KiCad PCB and schematic editors were relaunched. Konnect's configured IPC socket answered from the project manager rather than the PCB editor, so live-board reinspection could not be confirmed; saved files load in KiCad CLI/Python and pass the checks above.
+
+**Still open:** W2 digital crossings beneath the ADC input region, W3 USB pair geometry, remaining W4 filtering/damping/startup and return-path optimization, the other historical warnings, and physical noise/fit validation. This narrow cleanup does not close those findings or approve the manufacturing package.
+
+Local backup and validation evidence: `/tmp/crimpdeq-cleanup-tSxZlK` (temporary, not a release artifact).
+
 ## 1. Ver: NEEDS ATTENTION
 
 **The two CRITICAL blockers C1/C2 are resolved.** This is a prototype assessment, not a production qualification or approval of the existing fabrication package.

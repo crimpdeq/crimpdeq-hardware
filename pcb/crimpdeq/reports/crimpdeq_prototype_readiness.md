@@ -1,40 +1,25 @@
 # Crimpdeq prototype readiness review
 
-## ADC bypass follow-up — 2026-09-09
-
-This follow-up supersedes the affected placement/metadata counts below; the original review remains historical evidence, not a certification of the current fabrication ZIP.
-
-- Retained the reviewed local C11/C19 bypass improvements and approximately 2.04 mm SCLK stub removal. Supply-pad-to-U3 distances are now 2.98 mm (C11/AVDD) and 2.53 mm (C19/DVDD); a dedicated GND via was added. These are layout improvements, not measured noise results.
-- Synchronized R7/R8 schematic and PCB LCSC fields to `C25076` (100 Ω), matching the existing BOM. W1's resistor-code conflict is closed; the cable-pad DNP issue remains open.
-- Moved C11's reference below the capacitor, clear of C19's silkscreen and solder-mask openings. Removed the newly dangling +3V3 via at (139.054, 71.6819) mm.
-- Corrected only C11/C19 in the existing CPL: C11=(140.8000, −69.1000), C19=(140.3000, −67.6000), both 0°/top. Other 53 rows are unchanged. No BOM or Gerbers were generated or changed.
-- Saved-board Konnect DRC: **zero errors, zero unconnected items, 81 board warnings**. All-severity refill/parity check: **10 existing parity warnings**, no errors. ERC and `verify.py` pass: 55 components, 172 connected named pads, 13 GND vias; AIN0/AIN1 remain 7.338 mm each, F.Cu, zero vias.
-- Cleanup scope was checked against the pre-cleanup backup: exactly two PCB supplier fields, one reference position and one removed via, plus cached zone fills/serialization ordering. The preceding bypass work is preserved. A focused front-silkscreen/mask render confirms the C11/C19 labeling is clear.
-- KiCad PCB and schematic editors were relaunched. Konnect's configured IPC socket answered from the project manager rather than the PCB editor, so live-board reinspection could not be confirmed; saved files load in KiCad CLI/Python and pass the checks above.
-
-**Still open:** W2 digital crossings beneath the ADC input region, W3 USB pair geometry, remaining W4 filtering/damping/startup and return-path optimization, the other historical warnings, and physical noise/fit validation. This narrow cleanup does not close those findings or approve the manufacturing package.
-
-Local backup and validation evidence: `/tmp/crimpdeq-cleanup-tSxZlK` (temporary, not a release artifact).
+**Last updated:** 2026-09-09 for branch `fix/adc-bypass-cleanup`, HEAD `87dc660`.
 
 ## 1. Ver: NEEDS ATTENTION
 
 **The two CRITICAL blockers C1/C2 are resolved.** This is a prototype assessment, not a production qualification or approval of the existing fabrication package.
 
-**Canonical saved-fill DRC, ERC, explicit error-level schematic parity, and `verify.py` pass.** C12/R7/R8 CPL positions now match the live board; the board was refilled and saved through Konnect IPC. Only cached zone-fill polygons changed in the PCB; routing, placement, pad nets and other design content are unchanged.
+**Canonical saved-fill DRC, ERC, explicit schematic parity, and `verify.py` pass.** C11/C19 bypass placement and routing were improved, an unused IO5_SCK stub was removed, R7/R8 supplier metadata was corrected, and the affected C11/C19/C12/R7/R8 CPL positions match the saved board. No BOM or Gerbers were generated or changed.
 
-**Next action:** resolve or explicitly disposition W1–W8, particularly assembly metadata and analog/USB layout concerns, then prepare and check one synchronized manufacturing package under separate authorization. The blocker-fix request was applied only to C1/C2: three existing CPL rows were corrected; no BOM or Gerbers were generated or changed.
+**Next action:** resolve or explicitly disposition the remaining W1–W8 items, particularly cable-pad DNP handling, digital routing beneath the analog inputs, ADC filtering/damping, and USB geometry. Then prepare and check one synchronized manufacturing package under separate authorization.
 
 ### Reviewed identity and scope
 
-- Review date: 2026-09-08; KiCad CLI/Python 10.0.6.
+- Original review date: 2026-09-08; current validation: 2026-09-09; KiCad CLI/Python 10.0.6.
 - Working tree: `/home/sergio/Documents/Crimpdeq/crimpdeq-pcb`.
 - Canonical project: `pcb/crimpdeq/crimpdeq.kicad_pro`.
-- Branch: `feat/ads1220`; HEAD: `554dbfe7dfcd972b2a8799a22fa54f7b5a465613`.
+- Current branch: `fix/adc-bypass-cleanup`; reviewed HEAD: `87dc660`.
 - Trusted manufactured baseline: `v2.0.0`, commit `4976be254f64bac70d162865ef47e0bbe7e2f28b`.
-- Konnect confirmed the canonical board is the single board open over IPC. Its component listing agrees with the inspected placements. This report certifies the saved working-tree revision, not arbitrary unsaved editor changes.
-- HEAD and v2.0.0 were exported into `/tmp/crimpdeq-review-refjLB/{current,baseline}`. The working tree had no tracked modifications when exported. No live PCB/schematic git diff was used.
-- Original review: the user authorized temporary-copy CLI/API validation to fill Konnect capability gaps. Refills then occurred only on the temporary board; canonical source hashes remained unchanged.
-- Subsequent blocker-fix authorization: canonical zones were refilled and saved through Konnect IPC, three existing CPL rows were corrected, and this report was updated. No schematic, project rules, libraries, BOM or Gerbers were changed. Backups and verification evidence are under `/tmp/crimpdeq-blockers-cgLHpp`. The pre-existing staged report was preserved in the index; follow-up edits were not staged.
+- The original review confirmed the canonical board over IPC. Current validation used the saved canonical files plus an isolated refill/parity copy because the previously loaded Konnect DRC/ERC operations were unavailable through the current MCP gateway. This report assesses saved files, not arbitrary unsaved editor state.
+- The original `feat/ads1220` revision and v2.0.0 were exported into `/tmp/crimpdeq-review-refjLB/{current,baseline}` for the baseline comparison in §3. Later fixes were inspected separately against their pre-change sources.
+- Canonical zones were refilled and saved during the blocker fix. Subsequent changes improved C11/C19 bypass placement/routing, removed the IO5_SCK stub, synchronized R7/R8 metadata, corrected C11/C19 CPL rows, and cleaned the affected silkscreen and obsolete via. No project rules, libraries, BOM or Gerbers were changed.
 
 ## 2. Coverage
 
@@ -47,35 +32,38 @@ The original Konnect refill/parity coverage gap is resolved by the authorized is
 | `find_orphan_items` | PASS: zero orphans |
 | `find_shorted_nets` | PASS: zero shorts |
 | `find_single_pin_nets` | Three heuristic hits: Buck_Coil, ENABLE, CHIP_PU; actual connected pad counts are 2, 2, 3, respectively. Not single-pin electrical nets |
-| Konnect `run_erc`, errors only | PASS: zero errors |
+| Current CLI ERC, errors only | PASS: zero errors. The earlier Konnect ERC result was also zero errors |
 | CLI DRC, refill + save temporary board + schematic parity + errors only | PASS: exit 0, zero violations, zero unconnected items, zero error-severity parity findings |
-| Additional CLI all-severity DRC + parity | 84 board warnings and 10 schematic-parity warnings; no errors or unconnected items |
-| `tools/crimpdeq/verify.py` on refilled copy | PASS: 55 components, 172 connected named pads, 12 GND stitching vias; golden pin nets, unique symbol paths, component-side package geometry, outline, no L2 tracks, no via drill/paste overlap and route limits pass |
+| Current isolated CLI all-severity DRC + parity | 81 board warnings and 10 schematic-parity warnings; no errors or unconnected items |
+| `tools/crimpdeq/verify.py` on current canonical board | PASS: 55 components, 172 connected named pads, 13 GND stitching vias; golden pin nets, unique symbol paths, component-side package geometry, outline, no L2 tracks, no via drill/paste overlap and route limits pass |
 | Konnect `run_design_review` | Complete: one sheet, 112/112 symbols resolved, 55 footprints, 213 physical pads. Automated verdict NOT READY from two duplicate J2 decoupling heuristics; see adjudication below |
 | Konnect `validate_for_manufacturing(fab_house='pcbway')` | Automated READY, zero issues, four layers. Does not certify existing CPL, part selection or analog performance |
 | Konnect `audit_manufacturing`, `get_design_rules` | Completed; double-sided assembly and three cross-side proximity heuristics investigated |
 | Konnect netlist export, isolated CLI XML netlists + read-only KiCad APIs | Compared all 43 shared schematic references and their PCB pad assignments, side, rotation and side-normalized pad geometry; details in §3 |
 | Current schematic-to-board endpoint-set comparison | PASS: all 32 multi-pad electrical net endpoint sets match exactly, independent of names. This resolves the electrical meaning of the reported net-name conflicts, not their metadata inconsistency |
 | Layout/DFM inspection | Four copper-layer Konnect SVG plots inspected; API checks of zones, analog reference coverage, digital crossings, dimensions, drills, rings, DNP and package pads completed |
-| Existing BOM/CPL and DFM notes | Original review found obsolete analog CPL positions; follow-up corrected only C12/R7/R8. BOM and DFM notes unchanged. Existing Gerber ZIP not certified or regenerated |
-| Blocker-fix validation | Canonical saved-fill Konnect DRC: zero errors/unconnected items without another refill; ERC zero errors; canonical `verify.py` PASS. Explicit all-severity parity on a copy of the newly saved board: unchanged 84 board warnings + 10 parity warnings, zero errors |
-| Change-scope verification | Parsed before/after board structures match when cached `filled_polygon` nodes and serialization ordering are excluded. CPL retains all 55 rows and changes exactly C12/R7/R8; coordinates/angles agree with post-save live Konnect queries |
+| Existing BOM/CPL and DFM notes | CPL positions for C12/R7/R8 and later C11/C19 were corrected from saved-board placement. BOM and DFM notes are unchanged. Existing Gerber ZIP was not certified or regenerated |
+| Current validation | Saved canonical board and isolated refill copy: zero errors/unconnected items; ERC zero errors; canonical `verify.py` PASS. Explicit all-severity parity: 81 board warnings + 10 parity warnings, zero errors |
+| Change-scope verification | Earlier blocker fix changed C12/R7/R8 CPL rows and cached fills. The bypass follow-up moved/rerouted C11/C19, added one GND via, removed the IO5_SCK stub and an obsolete +3V3 via, synchronized two supplier fields, moved C11 text, and changed only C11/C19 in the CPL. Pad endpoint connectivity and AIN routing are unchanged |
 
 ### Reproducible isolated checks
 
-With `T` pointing to the isolated review directory:
+From the repository root, with `T` as a fresh temporary directory:
 
 ```sh
-B="$T/current/pcb/crimpdeq/crimpdeq.kicad_pcb"
+DESIGN=pcb/crimpdeq
+T="$(mktemp -d /tmp/crimpdeq-review-XXXXXX)"
+cp "$DESIGN"/crimpdeq.kicad_{pcb,sch,pro,dru} "$T/"
+
 kicad-cli pcb drc --refill-zones --save-board --schematic-parity \
-  --severity-error --exit-code-violations --format json \
-  --output "$T/drc-errors.json" "$B"
-/usr/bin/python3 tools/crimpdeq/verify.py "$B"
-kicad-cli pcb drc --schematic-parity --severity-all --format json \
-  --output "$T/drc-all.json" "$B"
+  --severity-all --format json --output "$T/drc.json" \
+  "$T/crimpdeq.kicad_pcb"
+kicad-cli sch erc --severity-error --format json \
+  --output "$T/erc.json" "$T/crimpdeq.kicad_sch"
+/usr/bin/python3 tools/crimpdeq/verify.py "$DESIGN/crimpdeq.kicad_pcb"
 ```
 
-ERC and first netlists were obtained through Konnect. XML netlists were subsequently exported with `kicad-cli sch export netlist --format kicadxml` because the Konnect interface did not expose that comparison format. Netlists and plots were inspection artifacts under `/tmp`, not manufacturing deliverables.
+The current MCP gateway did not rediscover the previously loaded Konnect DRC/ERC operations, so the 2026-09-09 refresh used this documented CLI fallback. The original review's netlists were first obtained through Konnect; XML netlists were subsequently exported with `kicad-cli sch export netlist --format kicadxml` because Konnect did not expose that comparison format. Netlists and plots were inspection artifacts under `/tmp`, not manufacturing deliverables.
 
 **Important limitations:** error-only parity hides warning-severity net conflicts. Existing project settings also ignore `missing_courtyard`, `track_not_centered_on_via`, `tuning_profile_track_geometries`, `footprint_filters_mismatch`, and `footprint_type_mismatch`; this review changed no severities or exclusions. In particular, a DRC pass does not validate USB tuning geometry. `verify.py` does not itself prove antenna clearance or absence of digital routing beneath analog inputs; the supplementary geometry/plot checks address those topics. These checks are not electromagnetic simulation or PCBWay process approval.
 
@@ -194,21 +182,21 @@ Exactly these three rows changed; the other 52 entries, including existing J2 ce
 
 Before the fix, saved canonical copper still produced **54 DRC errors**: 43 clearance, five hole-clearance and six solder-mask-bridge findings. `refill_zones` and `save_project` were applied to the confirmed canonical live board through IPC. DRC of the saved board, without another refill, now reports **zero errors and zero unconnected items**. ERC and `verify.py` pass; explicit all-severity schematic parity has no errors and retains the previously documented ten warnings.
 
-A format-aware before/after comparison confirms that only cached filled polygons changed in the PCB, aside from serialization ordering. No tracks, vias, pads, footprints, zone definitions, net assignments or rules were changed. The existing Gerber ZIP remains unchanged and **is not certified as representing these new saved fills**; preparing and checking a synchronized fabrication package remains a separate release action.
+For the C2 refill operation specifically, a format-aware before/after comparison confirmed that only cached filled polygons changed in the PCB, aside from serialization ordering. Later authorized bypass-layout cleanup changed the focused items listed in the coverage table; it did not change pad endpoints or the AIN routes. The existing Gerber ZIP remains unchanged and **is not certified as representing the current board**; preparing and checking a synchronized fabrication package remains a separate release action.
 
 ### WARNING — resolve or explicitly disposition before ordering
 
-**W1. R7/R8 part selection and J5–J12 DNP intent disagree across sources.** R7/R8 schematic Value is `100R 1%`, but LCSC is `C25741`, also used by the 100 kΩ R9/R15 line. Their AssemblyNote explicitly prohibits 100 kΩ. Existing BOM correctly uses `C25076` for 100 Ω, so this is a source-of-truth conflict, not a claim that the existing BOM specifies the wrong value. J5–J12 have PCB DNP=false and attributes=0, and remain in the CPL; the existing BOM explicitly says Do Not Place. **Fix:** make source metadata and eventual assembly files agree; PCBWay must treat those eight entries as bare cable pads, not buy/place connectors. Do not regenerate BOM blindly from current fields.
+**W1. J5–J12 DNP intent still disagrees across sources; R7/R8 metadata is fixed.** R7/R8 schematic and PCB LCSC fields now use `C25076` for 100 Ω, matching their Value, AssemblyNote and existing BOM. J5–J12 still have PCB DNP=false and attributes=0 and remain in the CPL, while the existing BOM explicitly says Do Not Place. **Fix:** make source metadata and eventual assembly files agree; PCBWay must treat those eight entries as bare cable pads, not buy/place connectors. Do not regenerate BOM blindly from current fields.
 
 **W2. Digital routing enters the projected ADS1220 input region.** No digital tracks enter the lower filter/cable region x=128–140, y=74–81.9 mm. However, near U3, USB_D+/USB_D− on L3 and IO3_CS on B.Cu cross beneath AIN traces: AIN0 at x=138.28 intersects their projections near y=70.40, 70.85 and 70.9141 mm; AIN1 is also crossed. L2 GND separates these layers and is intact under the analog copper, reducing coupling, but the stated “digital nets kept off the analog region” constraint is not fully satisfied. **Fix:** move those digital paths outside the projected analog corridor in an authorized layout pass, or obtain an explicit prototype-only design-constraint exception with radio/USB/ADC noise tests. No exception is granted by this report.
 
 **W3. USB aggregate length equality is not proof of a well-routed matched pair.** Both nets use 0.20 mm tracks and three vias, with total segment lengths approximately 41.499 mm each. However, USB_D+ on In2.Cu contains overlapping collinear segments `(148.550,73.400)→(146.965,73.400)` and `(146.965,73.400)→(148.548,73.400)`, overlapping for **1.583 mm**. Summing both counts the same copper twice; the near-joined vertical runs at x=148.550/148.548 also bypass that out-and-back excursion electrically. TVS branches further complicate delay comparison. Plots show separated routing and rectangular detours, not uniform pair coupling. **Fix:** inspect/remove the redundant excursion and route/check actual U1-to-J2 paths as a pair, preserving ESD branches; obtain PCBWay's stackup before claiming 90 Ω. Full-speed USB may tolerate this, but a numeric total-length match is not a validation.
 
-**W4. New ADC bypass and interface implementation carry noise/startup risk.** C19's supply pad is about 2.96 mm straight-line from DVDD; C11's is about 4.14 mm from AVDD. Actual current-loop lengths can be longer; 100 nF connectivity alone does not establish optimal bypassing. There are no TI-recommended 47 Ω SPI series resistors. C12 dielectric is unspecified and its simple RC pole is relatively high. **Fix:** confirm actual AVDD/DVDD return paths, selected MLCC dielectric and supply ramp; consider closer bypassing and damping/filter footprints in a separately authorized revision. Test at intended gain/rate with USB and radio activity. TI requires monotonic supply ramp slower than 1 V per 50 µs and approximately 50 µs settling before communication; that is not proven by static checks.
+**W4. ADC bypass placement improved, but interface/filtering and startup risk remain.** C11/AVDD and C19/DVDD supply-pad distances are now approximately 2.98 mm and 2.53 mm, respectively, with direct F.Cu supply routing and a dedicated nearby GND via. This is better than the reviewed 4.14/2.96 mm placement, but actual current-loop inductance and return quality are not proven by distance alone. There are no TI-recommended 47 Ω SPI series resistors. C12 dielectric is unspecified and its simple RC pole is relatively high. **Fix:** confirm the AVDD/DVDD return paths, selected MLCC dielectric and supply ramp; consider damping/filter footprints in a separately authorized revision. Test at intended gain/rate with USB and radio activity. TI requires a monotonic supply ramp slower than 1 V per 50 µs and approximately 50 µs settling before communication; static checks do not prove either.
 
 **W5. Ten warning-level parity findings remain.** Five pad-net name conflicts are limited to L1.1/U6.3 (`Buck_Coil` versus `/Buck_Coil`) and C12.1/R7.1/U3.11 (`Net-(U3-AIN0)` versus the schematic AIN0/REFP1 auto-name). Three footprint-ID warnings concern C11/C19/U3; two datasheet-field differences concern Q2/U5. All 32 multi-pad endpoint sets match, so no extra electrical connection is inferred from these warnings. **Fix:** synchronize metadata carefully without moving copper or changing pad endpoints; rerun all-severity parity. An error-only pass is not metadata parity.
 
-**W6. Silkscreen and dangling copper need cleanup/disposition.** The 84 board warnings comprise 24 mirrored/nonmirrored texts, five silk overlaps, five silk-on-copper, 39 footprint-library mismatches, two unavailable library aliases, seven dangling tracks and two dangling vias. Front `B−` overlaps D9 pads and R21/R22 text overlaps neighboring pull-up pads; these can be clipped by fabrication. Dangling traces include a roughly 2.04 mm IO5_SCK stub, plus +3V3/VSYS remnants; the dangling vias are on D4 DIN. **Fix:** preserve unambiguous battery/load-cell labels, remove unnecessary copper stubs where authorized, and inspect affected text layers before order. The two library aliases are Rust_Board/J2 and PCM_Espressif/U1; embedded pads are present and match baseline, so this is not evidence of missing physical pads. Avoid a blind library refresh.
+**W6. Silkscreen and dangling copper still need cleanup/disposition.** The current 81 board warnings comprise 24 mirrored/nonmirrored texts, five silk overlaps, five silk-on-copper, 39 footprint-library mismatches, two unavailable library aliases, four dangling tracks and two dangling vias. The C11/C19 text conflict and approximately 2.04 mm IO5_SCK stub are fixed. Remaining dangling tracks are three +3V3 remnants (0.568/0.889/0.885 mm) and one 0.732 mm VSYS remnant; the two dangling vias remain on D4 DIN. Front `B−` overlaps D9 pads and R21/R22 text overlaps neighboring pull-up pads; these can be clipped by fabrication. **Fix:** preserve unambiguous battery/load-cell labels, remove unnecessary copper stubs where authorized, and inspect affected text layers before order. The two library aliases are Rust_Board/J2 and PCM_Espressif/U1; embedded pads are present and match baseline, so this is not evidence of missing physical pads. Avoid a blind library refresh.
 
 **W7. Fab constraints and old DFM notes need reconciliation.** Current minimum via is 0.50/0.30 mm, giving a **0.10 mm nominal annular ring**; default netclass vias are 0.60/0.30 mm. Cable drills are **0.70 mm**, not the 0.80 mm stated in the older DFM note. Default net clearance is 0.20 mm, although the global minimum clearance field is 0.00 mm. **Fix:** confirm PCBWay's actual quoted ring/drill/clearance capability for this stackup and use current geometry, not the old report's blanket dimensions. A validator's READY is not a manufacturer acceptance.
 
@@ -228,7 +216,7 @@ A format-aware before/after comparison confirms that only cached filled polygons
 - 55 footprints: **36 front / 19 back**. Excluding eight cable-pad entries leaves 47 component placements; J2 is hybrid SMT/THT, not a purely SMT assembly.
 - L2/In1.Cu has **zero tracks**, one contiguous filled GND outline and normal antipads; it is not a solid copper sheet at non-GND vias/holes. Sampling AIN0/AIN1 centerlines and trace edges every ≤0.05 mm found no loss of L2 GND beneath either net; layer plot inspection agrees.
 - AIN0 and AIN1 are each **7.338 mm, zero vias, F.Cu**. C12 bridges the inputs, R7/R8 are symmetric; lower cable-pad/filter area contains no digital routing. The upper-region digital crossings remain W2.
-- Twelve dedicated GND vias; no via drill overlaps an SMD paste aperture. No physical proof of solder quality is implied.
+- Thirteen dedicated GND vias; no via drill overlaps an SMD paste aperture. No physical proof of solder quality is implied.
 - Buck switch node: **6.838 mm, zero vias, F.Cu**; feedback **4.847 mm, zero vias, F.Cu**. U6/L1/C15/C17 and R15/R16/C16 form a compact upper-board cluster. Divider 100 kΩ/22.1 kΩ and 22 pF feed-forward capacitor agree with the SY8088 3.3 V example. Efficiency, switching noise and transient response remain hardware tests.
 - Antenna footprint keepout bounds are approximately x=135.2–148.4, y=47.2–52.6 mm, with the antenna extending beyond the board's y=52.4 edge. No tracks/vias/pads intersect the actual antenna region. The board-level four-copper-layer keepout x=134.8–148.7, y=52.4–53.4 blocks tracks/vias/fill; interior fill sampling and plots show the corresponding notch on inner layers. This larger guard strip permits pads and includes module GND pads outside the actual antenna region; do not misclassify them as antenna copper violations. Keep metal/enclosure/battery away from the antenna in the product.
 

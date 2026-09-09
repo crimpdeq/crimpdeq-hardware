@@ -192,6 +192,34 @@ def verify_schematic_links(footprints):
         references_by_path[path] = reference
 
 
+def verify_analog_corridor(board, footprints):
+    """Keep digital copper on every layer out of the projected AIN/filter corridor."""
+    tracks = board_tracks(board)
+    pads = [item for footprint in footprints.values() for item in footprint.Pads()]
+    corridors = []
+    # Separate envelopes for the ADC fanout and the wider cable-side routing.
+    # Derive both from actual copper, including pads, with a 0.20 mm guard.
+    for nets in ({"Net-(U3-AIN0)", "Net-(U3-AIN1)"}, {"A+", "A-"}):
+        boxes = [item.GetBoundingBox() for item in tracks + pads if item.GetNetname() in nets]
+        margin = pcbnew.FromMM(0.2)
+        left = min(box.GetX() for box in boxes) - margin
+        top = min(box.GetY() for box in boxes) - margin
+        right = max(box.GetRight() for box in boxes) + margin
+        bottom = max(box.GetBottom() for box in boxes) + margin
+        corridors.append(pcbnew.SHAPE_RECT(pcbnew.VECTOR2I(left, top), right - left, bottom - top))
+    crossings = []
+    for item in tracks:
+        net = item.GetNetname()
+        if not (net.startswith(("IO", "USB_")) or net in {"CHIP_PU", "Net-(D4-DIN)"}):
+            continue
+        # Project all layers, including vias, onto the same XY corridor.
+        layer = pcbnew.F_Cu if item.Type() == pcbnew.PCB_VIA_T else item.GetLayer()
+        if any(corridor.Collide(item.GetEffectiveShape(layer), 0) for corridor in corridors):
+            crossings.append(f"{net}:{item.m_Uuid.AsString()}")
+    if crossings:
+        raise SystemExit(f"digital copper enters analog-input corridor: {crossings}")
+
+
 def main():
     if len(sys.argv) != 2:
         raise SystemExit("usage: verify.py BOARD")
@@ -205,6 +233,7 @@ def main():
 
     verify_schematic_links(footprints)
     connected_pads = verify_golden_netlist(footprints)
+    verify_analog_corridor(board, footprints)
 
     bounds = board.GetBoardEdgesBoundingBox()
     if not (abs(mm(bounds.GetWidth()) - 30.05) < 0.01 and abs(mm(bounds.GetHeight()) - 30.05) < 0.01):

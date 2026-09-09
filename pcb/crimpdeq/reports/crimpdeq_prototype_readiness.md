@@ -1,6 +1,6 @@
 # Crimpdeq prototype readiness review
 
-**Last updated:** 2026-09-09, W2 routing fix on `fix/adc-bypass-cleanup`, following `95f1986`.
+**Last updated:** 2026-09-09, W3 USB geometry update on `fix/adc-bypass-cleanup`, commit `9de34eb`.
 
 ## 1. Ver: NEEDS ATTENTION
 
@@ -8,16 +8,16 @@
 
 **Canonical saved-fill DRC, ERC, explicit schematic parity, and `verify.py` pass.** C11/C19 bypass placement and routing were improved, an unused IO5_SCK stub was removed, R7/R8 supplier metadata was corrected, and the affected C11/C19/C12/R7/R8 CPL positions match the saved board. No BOM or Gerbers were generated or changed.
 
-**W2 follow-up:** USB_D± now pass north of the AIN fanout on L3. CS goes around the north/west of U3, replacing its intermediate via without increasing its three-via count. Only these three nets and cached fills changed in the PCB; all footprints, pad assignments, analog routing, outline and rules are unchanged. No assembly or manufacturing files changed. A new `verify.py` corridor check fails on the original crossings and passes on the fixed board. Saved-board DRC/parity retains 81 board warnings and 10 parity warnings, with zero errors or unconnected items; ERC and `verify.py` pass. L2 GND remains contiguous and covers 4,976 sampled AIN trace-envelope points. Hardware noise testing remains pending.
+**W2/W3 follow-up:** USB_D± now pass north of the AIN fanout on L3. CS goes around the north/west of U3, replacing its intermediate via without increasing its three-via count. The redundant USB_D+ inner-layer overlap was subsequently removed, and `verify.py` now rejects same-net collinear overlaps on the USB routes. Only the affected routing and cached fills changed in the PCB; all footprints, pad assignments, analog routing, outline and rules are unchanged. No assembly or manufacturing files changed. The corridor and USB-geometry checks pass. Saved-board DRC/parity retains 81 board warnings and 10 parity warnings, with zero errors or unconnected items; ERC and `verify.py` pass. L2 GND remains contiguous and covers 4,976 sampled AIN trace-envelope points. USB impedance/path matching and physical ADC noise testing remain pending.
 
-**Next action:** resolve or explicitly disposition W1 and W3–W8, particularly cable-pad DNP handling, ADC filtering/damping, and USB geometry. Then prepare and check one synchronized manufacturing package under separate authorization.
+**Next action:** resolve or explicitly disposition W1, the remaining W3 USB matching/impedance work, and W4–W8, particularly cable-pad DNP handling and ADC filtering/damping. Then prepare and check one synchronized manufacturing package under separate authorization.
 
 ### Reviewed identity and scope
 
 - Original review date: 2026-09-08; current validation: 2026-09-09; KiCad CLI/Python 10.0.6.
 - Working tree: `/home/sergio/Documents/Crimpdeq/crimpdeq-pcb`.
 - Canonical project: `pcb/crimpdeq/crimpdeq.kicad_pro`.
-- Current branch: `fix/adc-bypass-cleanup`; prior bypass checkpoint: `87dc660`; W2 follows report commit `95f1986`.
+- Current branch: `fix/adc-bypass-cleanup`; prior bypass checkpoint: `87dc660`; W2 follows report commit `95f1986`; W3 geometry follows `9de34eb`.
 - Trusted manufactured baseline: `v2.0.0`, commit `4976be254f64bac70d162865ef47e0bbe7e2f28b`.
 - The original review confirmed the canonical board over IPC. For W2, Konnect could not reach the PCB editor, so the editors were closed, the source was backed up outside the project, and KiCad API routing edits were tested/refilled on an isolated copy before revision-checked replacement. Konnect DRC/ERC were available; CLI supplied explicit refill/save and schematic-parity checks not exposed by those tools. This report assesses saved files, not arbitrary unsaved editor state.
 - The original `feat/ads1220` revision and v2.0.0 were exported into `/tmp/crimpdeq-review-refjLB/{current,baseline}` for the baseline comparison in §3. Later fixes were inspected separately against their pre-change sources.

@@ -14,6 +14,8 @@ EXPECTED_REFS = frozenset(
     "R1 R2 R3 R7 R8 R9 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 "
     "U1 U2 U3 U5 U6".split()
 )
+DNP_REFS = frozenset({"J5", "J6", "J7", "J8", "J9", "J10", "J11", "J12"})
+PLACEMENT_REFS = EXPECTED_REFS - DNP_REFS
 TOP_ROTATION_OFFSETS = {"U3": 270.0, "U6": 180.0}
 # J2 uses the GCT body centroid. Cable pads J5-J12 are DNP THT pads.
 POSITION_OVERRIDES = {
@@ -90,10 +92,10 @@ with tempfile.TemporaryDirectory(prefix=f"{design_name}-cpl-") as temp_dir:
 raw_refs = [row["Ref"] for row in rows]
 if len(raw_refs) != len(set(raw_refs)):
     raise SystemExit("duplicate references in KiCad position export")
-if set(raw_refs) != EXPECTED_REFS:
+if set(raw_refs) != PLACEMENT_REFS:
     raise SystemExit(
-        f"position reference mismatch; missing={sorted(EXPECTED_REFS - set(raw_refs))}, "
-        f"extra={sorted(set(raw_refs) - EXPECTED_REFS)}"
+        f"position reference mismatch; missing={sorted(PLACEMENT_REFS - set(raw_refs))}, "
+        f"extra={sorted(set(raw_refs) - PLACEMENT_REFS)}"
     )
 
 rows.sort(key=lambda row: refkey(row["Ref"]))
@@ -135,4 +137,4 @@ with out.open("w", newline="") as destination:
 
         writer.writerow([reference, f"{x:.4f}", f"{y:.4f}", f"{rotation:.2f}", side])
 
-print(f"CPL written: {out} ({len(rows)} parts)")
+print(f"CPL written: {out} ({len(rows)} fitted parts; {len(EXPECTED_REFS) - len(rows)} DNP omitted)")

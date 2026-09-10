@@ -681,7 +681,7 @@
 		(path "/8de54e04-d2b0-4ada-87eb-08059e46c463")
 		(sheetname "/")
 		(sheetfile "crimpdeq.kicad_sch")
-		(attr dnp)
+		(attr exclude_from_pos_files dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -3329,7 +3329,7 @@
 		(path "/4b4e4c24-6efc-4c17-8632-05a041d5655a")
 		(sheetname "/")
 		(sheetfile "crimpdeq.kicad_sch")
-		(attr dnp)
+		(attr exclude_from_pos_files dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -3665,7 +3665,7 @@
 		(path "/432da093-eff8-43f2-a765-efc0c95b34f0")
 		(sheetname "/")
 		(sheetfile "crimpdeq.kicad_sch")
-		(attr dnp)
+		(attr exclude_from_pos_files dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -4386,7 +4386,7 @@
 			)
 		)
 		(path "/74b4cff0-0f91-443b-83da-e5b17592770c")
-		(attr dnp)
+		(attr exclude_from_pos_files dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -4492,7 +4492,7 @@
 		(path "/216939ee-310f-4ccd-9e18-77040749e0d8")
 		(sheetname "/")
 		(sheetfile "crimpdeq.kicad_sch")
-		(attr dnp)
+		(attr exclude_from_pos_files dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -5656,7 +5656,7 @@
 			)
 		)
 		(path "/765abe03-f803-4660-b91e-cf7faff4a609")
-		(attr dnp)
+		(attr exclude_from_pos_files dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -6161,7 +6161,7 @@
 		(path "/1ad78bbc-6576-48e7-a63b-fc6048e70b24")
 		(sheetname "/")
 		(sheetfile "crimpdeq.kicad_sch")
-		(attr dnp)
+		(attr exclude_from_pos_files dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -7406,7 +7406,7 @@
 		(path "/31fef13f-c995-4245-9615-a058c77e8ebd")
 		(sheetname "/")
 		(sheetfile "crimpdeq.kicad_sch")
-		(attr dnp)
+		(attr exclude_from_pos_files dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_circle
 			(center 0 0)
@@ -14785,14 +14785,6 @@
 		(uuid "05812448-3631-45ae-baac-27fe829fb1c9")
 	)
 	(segment
-		(start 145.886 67.8825)
-		(end 143.26 65.2556)
-		(width 0.2)
-		(layer "F.Cu")
-		(net "+3V3")
-		(uuid "05c0f8db-81c9-46db-8811-81c49e629dc4")
-	)
-	(segment
 		(start 135.388 69.4566)
 		(end 136.02 68.825)
 		(width 0.2)
@@ -18105,14 +18097,6 @@
 		(layer "B.Cu")
 		(net "Net-(D4-DIN)")
 		(uuid "4e46c557-e838-4274-bf20-cfee8c8d323d")
-	)
-	(segment
-		(start 144.711 63.8327)
-		(end 146.843 63.8327)
-		(width 0.2)
-		(layer "B.Cu")
-		(net "Net-(D4-DIN)")
-		(uuid "a88de2d6-3049-4fa2-aba5-665c74d45e23")
 	)
 	(segment
 		(start 148.2907 64.626)

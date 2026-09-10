@@ -5,7 +5,7 @@ Assembly files for `../crimpdeq.kicad_pcb`.
 - `crimpdeq_bom.csv`: PCBWay BOM (`Item`, `Quantity`, `Designator`, `Value`,
   `Footprint`, `MPN`, `Type`, `Notes`). `MPN` currently holds reviewed LCSC
   catalog numbers for sourcing.
-- `crimpdeq_cpl.csv`: 55 placements, 36 top / 19 bottom.
+- `crimpdeq_cpl.csv`: 47 fitted placements, 28 top / 19 bottom; J5–J12 are omitted as DNP.
 - `J5`–`J12` are bare cable pads and must be marked Do Not Place.
 - R20/R21/R22 are 10 kΩ 0402 pull-ups using the same validated part as R1/R2/R14.
 - `_gen_cpl.py` converts KiCad positions to the PCBWay convention, applies

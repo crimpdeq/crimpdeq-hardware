@@ -1,8 +1,98 @@
 # Crimpdeq prototype readiness review
 
-**Last updated:** 2026-09-10, W6 follow-up on `fix/adc-bypass-cleanup`, HEAD `901718df6b036220c08ba32bd71c96748747bdcb` (uncommitted follow-up changes).
+**Last updated:** 2026-09-10, owner-authorized W1/W3/W4/W6/W7/W8 round on `fix/adc-bypass-cleanup`, accepted baseline `c4dcad8300f53da1a8a7c072f7c7c78ad2f5c3da`. Changes remain uncommitted.
 
-**Current round:** **NEEDS ATTENTION.** Prior remediation was committed as `901718d` at Sergio's request, without pushing. The four subsequently queued W6 objects are now removed; two further dangling track segments are exposed and retained outside that four-item scope. Final checks: **0 DRC errors, 0 unconnected, 43 board warnings, 0 parity findings, ERC 0 errors; `verify.py` PASS.** C1/C2/W2/W5 and W1 source metadata remain resolved; W3/W4/W7/W8, the two-track W6 decision and W1 assembly-release handling remain open. Historical rounds and the updated decision queue follow.
+**Current verdict: NEEDS ATTENTION.** W1 placement exclusion and the two authorized W6 stub removals are complete in source. Final/recovery checks: **0 DRC errors, 42 DRC warnings, 0 unconnected items, 0 schematic-parity findings; ERC 0 errors and 30 warnings; `verify.py` PASS; no unexpected netlist changes.** One newly exposed track remains. Manufacturer acceptance, component decisions and physical qualification remain open. The new round below supersedes historical counts and decision queues later in this document.
+
+## 2026-09-10 accepted-c4dcad8 remediation round
+
+### Applied scope and verification
+
+- J5–J12 already had schematic and PCB DNP status. Each PCB footprint now has one canonical `(attr exclude_from_pos_files dnp)` block. All eight retain DNP and are excluded from native placement exports; they are not excluded from the informational BOM. KiCad Python load/save/reload confirmed those flags. No schematic edit was needed.
+- `assembly/_gen_cpl.py` now rejects any native-export reference set other than the 47 fitted components, without filtering or compatibility fallback. CPL regeneration removed exactly J5–J12: **47 placements, 28 top / 19 bottom**. BOM regeneration was byte-identical: eight explicit Do Not Place rows remain. No Gerbers or other fabrication outputs were regenerated or certified.
+- Removed only `05c0f8db-81c9-46db-8811-81c49e629dc4` (+3V3, F.Cu) and `a88de2d6-3049-4fa2-aba5-665c74d45e23` (D4 DIN, B.Cu), after endpoint/interior copper and pad-envelope review supported dead-stub removal. No vias were removed. All 213 pad records, assignments, positions, dimensions and layers were preserved.
+- Newly exposed D4 DIN continuation **`4e46c557-e838-4274-bf20-cfee8c8d323d`**, approximately 0.9435 mm from `(146.843,63.8327)`, remains intentionally untouched. Recursive track removal was not authorized; only exposed isolated vias were eligible, and none was found.
+- Parent reviewed the complete board/assembly diff. Board changes are exactly eight attribute substitutions and two segment removals; no footprint, pad, outline, rule, library, schematic, via or zone-content changes.
+
+| Check | Accepted baseline → final/recovery |
+|---|---|
+| All-severity DRC, refill and schematic parity on complete temporary checkout | Errors **0 → 0**; warnings **43 → 42** |
+| DRC classes | `lib_footprint_mismatch` **39 → 39**; `lib_footprint_issues` **2 → 2**; `track_dangling` **2 → 1** |
+| Unconnected / schematic parity | **0 → 0 / 0 → 0** |
+| All-severity ERC | Errors **0 → 0**; warnings **30 → 30**: 21 `lib_symbol_mismatch`, 5 `footprint_link_issues`, 4 `lib_symbol_issues` |
+| `verify.py` | **PASS**; 55 components, 172 connected named pads, 13 GND vias; AIN0/AIN1 each 7.338 mm, F.Cu, zero vias |
+| Baseline vs final exported schematic netlist | **0 unexpected changes** after normalizing generation date and temporary root; schematic byte-identical |
+| Visual review | Parent inspected three approximately 800-pixel crops from Konnect F.Cu/F.SilkS and B.Cu/B.SilkS plots: J5–J12 and both removal sites. Pads and neighboring copper/artwork remain intact; retained DIN continuation visible |
+
+Parent full-suite evidence: `/tmp/crimpdeq-final-DKbCcV/`; quota-recovery revalidation: `/tmp/crimpdeq-recovery-ARIYjq/`. Baseline: `/tmp/crimpdeq-baseline-ZdAsfg/`. The recovery run copied current tracked working files, including same-stem project/custom rules and libraries, rather than testing HEAD or an incomplete fixture. Commands were `kicad-cli pcb drc --severity-all --refill-zones --schematic-parity --format json`, `kicad-cli sch erc --severity-all --format json`, `/usr/bin/python3 tools/crimpdeq/verify.py`, and schematic netlist export. KiCad property-enum diagnostics appeared during Python verification; it nevertheless completed with PASS.
+
+One worker's incomplete fixture omitted `.kicad_dru` and libraries and reported four J2 hole-clearance errors. That result was rejected, not waived. Restoring the existing files in the disposable fixture gave zero errors; no canonical rule changed. The earlier assertion that baseline lacked refill was incorrect and is retracted.
+
+**Limits:** refill was exercised in disposable checks, not persisted into canonical cached fills. GUI reopen/live-editor inspection was not completed; CLI/Python loads and rendered layer plots were used. Visual inspection is of saved copper/artwork, not fresh canonical fill certification or physical fit. No manufacturing release is authorized. During quota recovery, unrelated local `AGENTS.md` additions and `.codex/` appeared and were preserved separately; `.pi/` remains local orchestration state. No commits, pushes, vendor contact or spending occurred.
+
+### Five-bucket decision queue
+
+| Bucket | Current disposition / next action |
+|---|---|
+| **(a) Completed locally** | W1 native placement exclusion plus BOM/CPL review; exactly two W6 dead stubs removed; full digital checks and focused visual inspection; read-only W3/W4/W6/W7/W8 evidence prepared. No electrical substitutions applied |
+| **(b) Owner design decisions** | Decide disposition of retained `4e46c557…`; review U2/U6/Q2 courtyard differences and unresolved U1/J2 library sources; approve/reject four 47 Ω SPI resistors; choose a verified C12 dielectric/MPN; choose exact WS2812B-V6 retention with explicit prototype risk versus a researched replacement. USB retuning awaits stackup; no retune approved |
+| **(c) PCBWay contact/acceptance** | Obtain actual stackup/dielectric/impedance data and written acceptance of 0.10 mm nominal annular ring, holes/slots, clearances and assembly process. Questions below are drafted, not sent |
+| **(d) Procurement/spending** | C12 requires a current manufacturer approval sheet/orderability confirmation before part approval or purchase; any LED replacement also requires exact compatibility evidence and spending authorization. No parts ordered |
+| **(e) Physical prototype testing** | ADS1220 startup/ramp/reset/back-power and noise with USB/radio/LED activity; LED supply/data/brightness tests over measured rail tolerance and intended temperature. Define owner noise/transient acceptance targets before pass/fail; no hardware testing performed |
+
+### W6 library audit disposition
+
+All 41 library-warning items were mapped to current placed references. Of 39 resolvable standard-library footprints, the worker found no normalized pad/drill/copper/mask/paste differences. **U2, U6 and Q2 have real courtyard geometry differences** (embedded outer rectangles versus segmented/clipped library outlines). The other 36 have metadata/Fab/Silk artwork differences; artwork differences are not blanket manufacturing approval. Retain pending deliberate review, not blind refresh. **J2 `Rust_Board:GCT_USB4105-GF-A` and U1 `PCM_Espressif:ESP32-C3-MINI-1` aliases cannot resolve**; their library equivalence is unverified, not cosmetic. No warning was suppressed.
+
+The full per-item table is the completed `C-W6-audit.md` artifact in the worker evidence directory below. Missing aliases and courtyard decisions remain open even with zero DRC errors.
+
+### W3 USB evidence and unapplied proposal
+
+Saved-route centerline measurements (excluding ESD shunts, vertical via barrel lengths not included): U1.27→J2.A6 **35.1643 mm**, U1.27→J2.B6 **35.7343 mm**; U1.26→J2.A7 **35.8137 mm**, U1.26→J2.B7 **33.0597 mm**. Reported like-named connector endpoint skews are **0.6494 mm (A)** and **2.6746 mm (B)**. Duplicate-pad ties are each 2.7540 mm and must not be added blindly to a main path. These are geometry estimates, not delay/impedance qualification.
+
+All USB tracks are 0.20 mm. Main parallel In2.Cu overlap includes 3.448 mm at 0.20 mm edge gap and a separate 2.575 mm overlap at 1.094 mm gap; the route is not uniformly tightly coupled. D10/D7 ESD branches are separately estimated at 0.9189/1.4079 mm. The 0.002 mm D+ centerline endpoint mismatch is **not an electrical break**: finite-width copper overlaps; endpoint-only graph measurement has ±0.002 mm join uncertainty. No repair is warranted solely by that graph artifact.
+
+Keep L2 free of signals and preserve its reference plane, the existing ESD branches and ADS1220 corridor. Obtain actual stackup, then calculate width/gap and assess both connector orientations before proposing source-applicable retuning. Detailed unapplied routing proposal: `/tmp/w3_usb_retune_proposal.md`; no KiCad routing patch was applied or claimed ready to apply.
+
+### W4 ADS1220 / C12 / SPI evidence
+
+TI ADS1220 [SBAS501D](https://www.ti.com/lit/ds/symlink/ads1220.pdf), pp. 4, 47, 50–51, 64–66, requires local AVDD/DVDD bypassing, low-impedance returns, SPI mode 1, reset delays and monotonic supply ramp slower than 1 V/50 µs. Local transcription: `pcb/datasheets/ads1220.md:190–206,1819–1822,1913–1929,2430–2451,2485–2491`.
+
+U3 AVDD/DVDD/REFP0 share +3V3; AVSS/DGND/REFN0 share GND. C11/C19 are parallel bypasses, with a shared ground-return segment/via rather than independent return loops. Routed ground distances to the via are approximately 1.18 mm (C11) and 2.59 mm (C19). Geometry does not certify loop inductance, pin ripple, ramp or noise. C12 is across AIN0/AIN1, not supply bypass. External input/back-power limits still apply; do not infer protection from the existing 100 Ω input resistors.
+
+Proposed **R23 SCLK, R24 MOSI, R25 CS** belong near their U1 driver pins; **R26 MISO** belongs near U3.15, its driver. TI recommends 47 Ω on digital connections but requires checking bus-capacitance/timing effects. Dedicated DRDY remains NC. Conceptual, explicitly non-source-applicable diff: `/tmp/crimpdeq-w4-spi-series-concept.diff`. It contains endpoint/net-split intent, not invented KiCad UUIDs or coordinates.
+
+C12 is presently 0603, 0.1 µF, with existing BOM mapping C14663/X7R. **No current orderable 100 nF C0G/NP0 0603 MPN was verified.** Worker E identified Murata `GRM1885C1H104JA01D` as a provisional catalog lead only; current product lookup failed and the old family catalog is not an approval sheet. Do not treat a decoded part number/catalog table as verified procurement suitability. KEMET family evidence also did not establish the required exact combination. C12 source and BOM remain unchanged; sourcing research remains open.
+
+Physical test plan: scope AVDD/DVDD at U3 through cold start, USB/battery transitions and load steps; check monotonic ramp, input excursions/back-power, CS/reset delays and mode-1 readback. Compare shorted-input and bridge-simulator noise at intended gain/rate across USB disconnected/connected, radio idle/TX, LED off/static/activity and charging/load transients. Log RMS/peak-to-peak/input-referred noise, rail ripple and correlated spectra. TI typical noise tables are comparisons, not guaranteed acceptance limits. Define board-specific noise, droop, settling and injection-current targets before qualification.
+
+### W7 fabrication / W8 LED evidence
+
+Board nominal geometry: 30 × 30 mm, four layers, 1.6 mm; 64 vias 0.60/0.30 mm (0.15 mm ring), **3 vias 0.50/0.30 mm (0.10 mm ring)**; eight cable pads 1.50/0.70 mm (0.40 mm ring). J2 shell slots: S1/S4 drill 0.65 × 1.70 mm in 1.05 × 2.10 mm pads; S2/S3 drill 0.65 × 1.40 mm in 1.00 × 2.00 mm pads; two separate 0.65 mm NPTH locators. These are source dimensions, not verified finished-hole measurements. Routed-segment minimum unlike-net clearance measured 0.20 mm; pad-only minimum edge clearance 0.50 mm. Neither replaces whole-board DRC or vendor process acceptance.
+
+[PCBWay capabilities](https://www.pcbway.com/capabilities.html) and [manufacturing tolerances](https://www.pcbway.com/pcb_prototype/PCB_Manufacturing_tolerances.html) publish a 0.15 mm minimum annular ring; order-specific acceptance is still required. Existing J2-only 0.15 mm hole-clearance rule was preserved; it is distinct from the 0.20 mm copper clearance.
+
+Exact WS2812B-V6/C52917433 [Worldsemi datasheet via LCSC](https://www.lcsc.com/datasheet/C52917433.pdf) advertises 3.3 V support, but electrical/LED tables are conditioned at 5 V/25 °C. Its 3.3 V lower supply figure leaves no demonstrated margin below nominal 3V3. Board target is 5050 four-pad VDD=1/DOUT=2/GND=3/DIN=4, one-wire GRB. Generic older WS2812B is not interchangeable evidence. No exact alternative with verified rail-envelope, package, polarity and protocol compatibility was established: SK6812 suffixes remain unverified; APA102-class clock/data parts are not drop-ins. Retain exact V6 only if the owner explicitly accepts prototype risk; otherwise continue replacement research, not a blind swap.
+
+LED bench plan: measure actual VDD extrema at D4 during startup, USB/charging, radio TX and full-white load over intended temperature; scope DIN thresholds/timing/reset (>280 µs per V6 sheet), verify GRB colors and frame reliability, current, brightness, droop and ADC interference. No operating-envelope guarantee or hardware pass is claimed.
+
+### Exact PCBWay questions — ready to send, NOT SENT
+
+**W3 stackup / impedance:**
+
+> Please provide the exact finished four-layer stackup proposed for this 30 × 30 mm Crimpdeq board, not a generic stackup. For L1–L2, L2–L3 and L3–L4, state finished dielectric thickness after pressing, Dk/Df, frequency/test method and tolerances. State each layer's base and finished copper/plating thickness and tolerances, solder-mask thickness/Dk assumptions, and finished board-thickness tolerance. For the USB pair routed primarily on L3/In2.Cu adjacent to L2/In1.Cu GND, can you calculate width/gap for 90 Ω differential impedance, state the guaranteed tolerance and provide same-panel coupon testing? Please specify coupon geometry/location, test method and result tolerance, and confirm validity for the selected copper/plating/mask options. Please identify required routing changes before release; do not alter our design without approval.
+
+**W7 process / assembly acceptance:**
+
+> Please confirm written acceptance, or required redesign, for this 30 × 30 mm, four-layer nominal 1.6 mm board: three 0.50 mm pad/0.30 mm drill vias (0.10 mm nominal annular ring), 64 vias at 0.60/0.30 mm, eight bare cable PTH pads at 1.50/0.70 mm, J2 plated shell slots S1/S4 with 0.65 × 1.70 mm source drill dimensions in 1.05 × 2.10 mm pads, S2/S3 with 0.65 × 1.40 mm source drill dimensions in 1.00 × 2.00 mm pads, and two 0.65 mm NPTH locators. Your published minimum annular ring is 0.15 mm: can your quoted process accept the three 0.10 mm nominal rings, with what registration/etch/plating allowances? State whether supplied drill dimensions are interpreted as finished holes/slots or tool sizes, drill compensation, plating thickness and finished PTH/NPTH/slot width/length tolerances. Confirm 0.20 mm copper clearance, the separate J2-only 0.15 mm hole-clearance exception, 0.50 mm copper-to-outline requirement, and the actual four-layer stackup. J5–J12 are bare cable pads, Do Not Place: no connectors or placement. Confirm cable soldering/strain-relief handling separately. J2 has SMT contacts and plated shell tabs: specify THT/manual/selective-solder handling, double-sided reflow support, inspection and any panel/fixture changes. Please identify all required changes before release; do not modify geometry without approval.
+
+### Evidence and proposal locations
+
+Completed worker artifacts A–F are under `/home/sergio/.pi/agent/sessions/--home-sergio-Documents-Crimpdeq-crimpdeq-pcb--/subagent-artifacts/outputs/06717ebd-cc72-4bb4-94b3-a85e4db7b13e/workers/`: `A-W1-retry.md`, `B-W6.md`, `C-W6-audit.md` (all 41 items), `D-W3.md`, `E-W4.md`, `F-W7-W8.md`. These local evidence paths are not portable release assets. E initially failed at provider quota, then resumed its own research and completed; completed workers were not replaced. The earlier incompatible edit-worker profile was stopped before design edits and superseded by the authorized design-worker retry.
+
+Unapplied proposals: `/tmp/w3_usb_retune_proposal.md` and `/tmp/crimpdeq-w4-spi-series-concept.diff`. No C12 replacement patch, LED replacement patch or retained-track deletion patch was produced: those remain unresolved decisions, not approved source changes. The full report records their missing evidence rather than claiming completion.
+
+## Historical review rounds (superseded by the round above)
 
 ## 1. Ver: NEEDS ATTENTION
 

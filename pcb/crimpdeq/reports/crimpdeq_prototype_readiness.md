@@ -1,18 +1,18 @@
 # Crimpdeq prototype readiness review
 
-**Last updated:** 2026-09-09, bounded remediation on `fix/adc-bypass-cleanup`, HEAD `4f3ed260a4c4dd86b32ec6d32ba566a6044ef294` (uncommitted working-tree changes).
+**Last updated:** 2026-09-10, W6 follow-up on `fix/adc-bypass-cleanup`, HEAD `901718df6b036220c08ba32bd71c96748747bdcb` (uncommitted follow-up changes).
 
-**Current round:** **NEEDS ATTENTION.** C1/C2/W2 remain resolved; W1 source DNP alignment and W5 metadata are fixed. W6 text warnings and the six authorized dangling objects are removed, but four further dangling items are exposed and retained outside this session's copper authority. Final checks: **0 DRC errors, 0 unconnected, 45 board warnings, 0 parity findings, ERC 0 errors; `verify.py` PASS.** W3/W4/W7/W8 and the residual W6 cleanup decision remain open; W1 assembly-release handling is still pending. See the new remediation round and decision queue; historical evidence below is retained, not current authorization.
+**Current round:** **NEEDS ATTENTION.** Prior remediation was committed as `901718d` at Sergio's request, without pushing. The four subsequently queued W6 objects are now removed; two further dangling track segments are exposed and retained outside that four-item scope. Final checks: **0 DRC errors, 0 unconnected, 43 board warnings, 0 parity findings, ERC 0 errors; `verify.py` PASS.** C1/C2/W2/W5 and W1 source metadata remain resolved; W3/W4/W7/W8, the two-track W6 decision and W1 assembly-release handling remain open. Historical rounds and the updated decision queue follow.
 
 ## 1. Ver: NEEDS ATTENTION
 
 **The two CRITICAL blockers C1/C2 and the W2 digital/analog corridor violation are resolved.** This is a prototype assessment, not a production qualification or approval of the existing fabrication package.
 
-**Current isolated refill DRC and errors-only ERC pass; explicit all-severity schematic parity is now zero and `verify.py` passes.** The 45 remaining board warnings are itemized in the remediation round. All-severity ERC was not rerun; its earlier warnings remain historical coverage. C11/C19 bypass placement and routing were improved, an unused IO5_SCK stub was removed, R7/R8 supplier metadata was corrected, and the affected C11/C19/C12/R7/R8 CPL positions match the saved board. No BOM or Gerbers were generated or changed.
+**Current isolated refill DRC and errors-only ERC pass; explicit all-severity schematic parity is now zero and `verify.py` passes.** The 43 remaining board warnings are itemized in the latest W6 follow-up round. All-severity ERC was not rerun; its earlier warnings remain historical coverage. C11/C19 bypass placement and routing were improved, an unused IO5_SCK stub was removed, R7/R8 supplier metadata was corrected, and the affected C11/C19/C12/R7/R8 CPL positions match the saved board. No BOM or Gerbers were generated or changed.
 
 **Historical W2/W3 follow-up (counts below precede this remediation):** USB_D± now pass north of the AIN fanout on L3. CS goes around the north/west of U3, replacing its intermediate via without increasing its three-via count. The redundant USB_D+ inner-layer overlap was subsequently removed, and `verify.py` now rejects same-net collinear overlaps on the USB routes. Only the affected routing and cached fills changed in the PCB; all footprints, pad assignments, analog routing, outline and rules are unchanged. No assembly or manufacturing files changed. The corridor and USB-geometry checks pass. Saved-board DRC/parity retains 81 board warnings and 10 parity warnings, with zero errors or unconnected items; ERC and `verify.py` pass. L2 GND remains contiguous and covers 4,976 sampled AIN trace-envelope points. USB impedance/path matching and physical ADC noise testing remain pending.
 
-**Next action:** Sergio/manufacturer must close the decision queue, including the four newly exposed W6 dangling items. Separately authorize and check a synchronized manufacturing package, with J5–J12 explicitly excluded from component placement. Current tool PASS is not ADC noise qualification, manufacturer acceptance, or certification of the existing Gerber/BOM/CPL package.
+**Next action:** Sergio/manufacturer must close the decision queue, including the two newly exposed W6 dangling track segments. Separately authorize and check a synchronized manufacturing package, with J5–J12 explicitly excluded from component placement. Current tool PASS is not ADC noise qualification, manufacturer acceptance, or certification of the existing Gerber/BOM/CPL package.
 
 ### Reviewed identity and scope — prior review-only round
 
@@ -53,7 +53,25 @@ The original Konnect refill/parity coverage gap was resolved by the historical i
 | Current validation | Saved canonical board and isolated refill copy: zero errors/unconnected items; ERC zero errors; canonical `verify.py` PASS. Explicit all-severity parity: 81 board warnings + 10 parity warnings, zero errors |
 | Change-scope verification | Earlier blocker fix changed C12/R7/R8 CPL rows and cached fills. The bypass follow-up moved/rerouted C11/C19, added one GND via, removed the IO5_SCK stub and an obsolete +3V3 via, synchronized two supplier fields, moved C11 text, and changed only C11/C19 in the CPL. Pad endpoint connectivity and AIN routing are unchanged |
 
-### 2026-09-09 bounded remediation round — latest evidence
+### 2026-09-10 W6 follow-up — latest evidence
+
+Sergio authorized committing the prior changes and proceeding with queued work. Commit `901718df6b036220c08ba32bd71c96748747bdcb` contains the prior schematic/PCB remediation and report; `.pi/` was left untracked and no push occurred. The next bounded task removed only the four W6 objects listed in the prior decision queue: three tracks (`7fadb04f`, `66885830`, `d76388cd`) and one via (`ea989365`). The schematic, text, pad geometry/net assignments, footprint placement, libraries, rules, zones and cached fills were not changed.
+
+| Check | Before → after follow-up |
+|---|---|
+| Isolated refill/save DRC | Errors **0 → 0**, unconnected **0 → 0**, board warnings **45 → 43** |
+| All-severity schematic parity | **0 → 0** |
+| Errors-only ERC | **0 → 0**; all-severity ERC not rerun |
+| Canonical `verify.py` | **PASS → PASS**; 55 components, 172 connected named pads, 13 GND vias; AIN0/AIN1 7.338 mm each, F.Cu, zero vias; corridor guards pass |
+| Scope/invariants | Full parent diff review: exactly four specified S-expressions removed; all other source bytes preserved apart from deletion-site whitespace. Tracked-file hashes: only PCB changed before this report update; no manufacturing outputs or other tracked files changed |
+
+**Remaining warnings:** 39 footprint-library mismatches + two library aliases + **two `track_dangling`** findings. Each remaining track was exposed by removal of its terminal segment; neither was included in the four-item follow-up scope. They remain unsuppressed and are named in §7. The written no-refresh library disposition still applies.
+
+The first follow-up worker failed at provider usage limit before edits. Sergio requested the same worker methodology; the fresh native background-worker retry succeeded, with a parent decision gate retaining the two newly exposed segments. Editors/locks were checked, backups made and canonical source hash guarded before applying an **unrefilled** candidate. Only temporary copies received `--save-board`. The parent independently reran the complete documented isolated block: all three command exit codes zero. Evidence: `/tmp/crimpdeq-w6-parent-final-3AYLx6/{drc.json,erc.json,verify.log}`; baseline hashes/report snapshot `/tmp/crimpdeq-w6-parent-uc0Q08/`. Validated canonical PCB SHA-256: `8aea5696f7fd23f1cc8b70366b968c350abbf4065f5645b38a8e1f56eec875e1`.
+
+**Follow-up visual review completed:** a fresh read-only worker rendered and inspected side-by-side F.Cu/B.Cu crops at all four edited regions (`/tmp/crimpdeq-w6-visual-975435/r{1,2,3,4}-{F_Cu,B_Cu}.png`). Each requested local feature disappeared, with adjacent pads/vias/copper visually intact; no collateral visual change was observed. A focused parser independently confirmed 607→603 segment/via records, exactly the four approved UUIDs absent and all remaining records byte-identical. AIN/L2 continuity is an unchanged-source invariant here, not a fresh full-board visual qualification. Canonical render-input hashes remained unchanged. GUI reload/save and physical qualification were **NOT RUN**. Disposable PNG/SVG previews were deleted after inspection; validation evidence and backups remain under `/tmp`.
+
+### 2026-09-09 bounded remediation round — before W6 follow-up
 
 This round accepts the supplied revalidation baseline rather than repeating the historical baseline comparison. Fresh-context native background workers performed research, geometry measurement, sequential schematic/PCB edits and visual review. The parent reviewed each design diff before the next edit phase and independently reran the documented isolated check block.
 
@@ -224,7 +242,7 @@ A symmetrical bridge excited at 3.3 V nominally places its common mode near 1.65
 
 ## 4. Findings
 
-### Latest disposition — working-tree remediation at `4f3ed260`
+### Latest disposition — working-tree follow-up at `901718d`
 
 | Finding | Latest status and evidence |
 |---|---|
@@ -235,7 +253,7 @@ A symmetrical bridge excited at 3.3 V nominally places its common mode near 1.65
 | W3 | **OPEN; MEASURED, NOT TUNED.** U1→J2 A-side D−/D+ planar difference 3.6374 mm; B-side 0.3134 mm. Branch-separated paths and limitations in §7; no USB copper changed. PCBWay stackup/90 Ω assessment and tuning decision pending. |
 | W4 | **OPEN; PROPOSAL ONLY.** Both 100 nF bypass capacitors share a 0.8786 mm routed return segment; current-loop impedance remains unqualified. Four 47 Ω SPI resistors and specified C12 C0G dielectric are proposed in §7, not applied. |
 | W5 | **FIXED.** Original ten parity findings resolved; final all-severity parity zero. All 57 schematic net endpoint sets and existing UUIDs preserved. Library/procurement quality is not inferred from metadata parity. |
-| W6 | **PARTIALLY FIXED.** Text warning categories zero; exact six authorized dangling objects removed. 45 warnings remain: 39 library mismatches + 2 aliases + 4 newly exposed dangling objects retained outside removal scope. Written dispositions below and §7. |
+| W6 | **PARTIALLY FIXED.** Text warning categories remain zero. Original six dangling objects and the subsequent four queued objects are removed. **43 warnings** remain: 39 library mismatches + 2 aliases + 2 newly exposed dangling tracks retained outside follow-up removal scope. Written dispositions below and §7. |
 | W7 | **OPEN; PUBLISHED CAPABILITY CONFLICT.** PCBWay's published 0.15 mm annular-ring minimum exceeds the board's 0.10 mm minimum; order-specific acceptance/redesign decision required. Published drills/spacing/slots do not constitute acceptance. |
 | W8 | **OPEN; ACTUAL V6 EVIDENCE FOUND.** Supplier-linked WS2812B-V6 datasheet explicitly says 3.3 V is supported, but guaranteed operating-range and VIH characterization at 3.3 V were not found. Keep/substitute qualification decision remains with Sergio. |
 
@@ -400,7 +418,7 @@ The V6 feature text states **“3.3 V power supply is supported.”** This corre
 
 ### W6 — additional bounded cleanup authorization needed
 
-The exact authorized six deletions were completed. DRC now identifies these **four remaining parent-branch items**, which were not separately reported until their terminal objects were removed:
+The original six deletions were completed in the prior remediation. The following **four subsequently queued parent-branch items were removed in the 2026-09-10 follow-up**; this table preserves their identities rather than implying they remain on the board:
 
 | Object / UUID | Net/layer | Geometry (mm) |
 |---|---|---|
@@ -409,6 +427,13 @@ The exact authorized six deletions were completed. DRC now identifies these **fo
 | Track `66885830-2dfd-4215-bd50-e0bb37166b1c` | VSYS / B.Cu | (156.6000,68.0310)→(156.3020,68.3298), 0.4220 mm |
 | Track `d76388cd-6241-4c6f-af23-d25cc3d40694` | D4 DIN / B.Cu | (144.3980,64.1454)→(144.7110,63.8327), 0.4424 mm |
 
-**Sergio decision:** authorize a separately bounded inspection/removal of these remaining branches, with connectivity proof, or explicitly disposition them. They were not removed or suppressed here. The 39 footprint mismatches and two aliases retain the written no-refresh disposition in §4 and require deliberate release review, not blind library updates.
+That four-item removal exposed **two further track segments**, both still present:
+
+| Object / UUID | Net/layer | Geometry (mm) |
+|---|---|---|
+| Track `05c0f8db-81c9-46db-8811-81c49e629dc4` | +3V3 / F.Cu | (145.8860,67.8825)→(143.2600,65.2556), 3.7144 mm; starts at a surviving route junction |
+| Track `a88de2d6-3049-4fa2-aba5-665c74d45e23` | D4 DIN / B.Cu | (144.7110,63.8327)→(146.8430,63.8327), 2.1320 mm; ends at a surviving via |
+
+**Sergio decision:** authorize a bounded inspection/removal of these two remaining spur segments and explicitly define whether any further exposed terminal objects may be included, or disposition them as retained. Confirm complete branch endpoints/connectivity before any further removal rather than silently expanding the four-item scope. These two tracks were not removed or suppressed here. The 39 footprint mismatches and two aliases retain the written no-refresh disposition in §4 and require deliberate release review, not blind library updates.
 
 **Release boundary:** no questions above have been sent. BOM/CPL/Gerber regeneration and review remain a separate authorized release step, including removing/explicitly excluding all eight bare cable-pad placements. Until the decision queue closes, the verdict stays **NEEDS ATTENTION**. Tool PASS is not analog noise qualification, manufacturer acceptance, certification of existing deliverables, or permission to order.

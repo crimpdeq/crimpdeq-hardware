@@ -6,10 +6,12 @@ on:
       - main
     paths:
       - "pcb/**"
+      - "libraries/**"
       - ".github/workflows/pcb_ci.yml"
   pull_request:
     paths:
       - "pcb/**"
+      - "libraries/**"
       - ".github/workflows/pcb_ci.yml"
   workflow_dispatch:
 

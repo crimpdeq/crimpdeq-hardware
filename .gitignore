@@ -2,6 +2,8 @@
 # Format documentation: https://kicad.org/help/file-formats/
 
 # Temporary files
+__pycache__/
+*.pyc
 *.000
 *.bak
 *.bck
@@ -29,19 +31,24 @@ fp-info-cache
 *.dsn
 *.ses
 
+# Generated release artifacts
+/artifacts/
+
 # Exported BOM files
 *.xml
-*.csv
 
 # Archived Backups (KiCad 6.0)
 **/*-backups/*.zip
 
 # Local project settings
 *.kicad_prl
+.pi/mcp.json
+
+# Local Freerouting / JRE downloads (see AGENTS.md — do not commit)
+.tools/
 
 # macOS
 .DS_Store
 
-# Analysis/output -- regenerable from source files
-pcb/crimpdeq/analysis/
-pcb/crimpdeq/production/
+# Editor local-history caches
+.history/
